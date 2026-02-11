@@ -1,27 +1,40 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+
+// Load env variables
+dotenv.config();
+
+// Import routes
 const authRoutes = require("./routes/authRoutes");
 const examRoutes = require("./routes/examRoutes");
 
-dotenv.config();
+// Debug: check if routes are loading
+console.log("authRoutes import:", authRoutes);
+console.log("examRoutes import:", examRoutes);
 
 const app = express();
 
+// Middleware
 app.use(express.json());
 
-// connect database
+// Connect to MongoDB
 connectDB();
 
+// Root route (test)
 app.get("/", (req, res) => {
   res.send("Online Exam Backend Running");
 });
 
-// auth routes
+// Mount routes
 app.use("/api/auth", authRoutes);
 app.use("/api/exams", examRoutes);
 
+console.log("Routes mounted");
 
-app.listen(process.env.PORT || 5000, () => {
-  console.log("Server running");
+// Start server
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
