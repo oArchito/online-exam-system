@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Exam Test</title>
+</head>
+<body>
+    <h2>Exam Running - Do NOT switch tab</h2>
+
+    <script>
+        // Paste values here
+        const attemptId = "698d5d83196fd7918f4d354c";
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY5OGNhZmMwNTc4NTRhNzE2M2I0M2FkMyIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzcwODcyMDI1LCJleHAiOjE3NzExMzEyMjV9.A6erRPgcuozLoPej2kbwsa6ZZaX-cihNcM90JDoefkc";
+
+        // Function to call backend
+        function reportViolation() {
+            fetch("http://localhost:5000/api/exams/violation", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({ attemptId: attemptId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Violation detected! Exam ended.");
+            })
+            .catch(error => {
+                alert("Error calling backend");
+            });
+        }
+
+        // Detect tab change
+        document.addEventListener("visibilitychange", function () {
+            if (document.hidden) {
+                reportViolation();
+            }
+        });
+
+        // Detect window minimize / switch
+        window.addEventListener("blur", function () {
+            reportViolation();
+        });
+    </script>
+</body>
+</html>
