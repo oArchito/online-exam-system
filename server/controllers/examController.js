@@ -111,8 +111,49 @@ const submitExam = async (req, res) => {
   }
 };
 
+// HANDLE TAB SWITCH / RULE VIOLATION
+const reportViolation = async (req, res) => {
+  try {
+    const { attemptId } = req.body;
+
+    const attempt = await Attempt.findById(attemptId);
+
+    if (!attempt) {
+      return res.status(404).json({ message: "Attempt not found" });
+    }
+
+    // Only same user can report
+    if (attempt.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    // If already finished, do nothing
+    if (attempt.status !== "in-progress") {
+      return res.status(400).json({ message: "Exam already finished" });
+    }
+
+    attempt.status = "violation";
+    attempt.endTime = new Date();
+
+    await attempt.save();
+
+    res.json({
+      message: "Exam ended due to rule violation",
+      attempt
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 
-module.exports = { createExam, startExam, submitExam };
+
+module.exports = {
+  createExam,
+  startExam,
+  submitExam,
+  reportViolation
+};
 
 

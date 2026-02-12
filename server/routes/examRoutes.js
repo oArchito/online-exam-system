@@ -1,7 +1,16 @@
 const express = require("express");
 const router = express.Router();
 
-const { createExam, startExam, submitExam } = require("../controllers/examController");
+const {
+  createExam,
+  startExam,
+  submitExam,
+  reportViolation
+} = require("../controllers/examController");
+
+const controller = require("../controllers/examController");
+console.log(controller);
+
 
 const { protect } = require("../middleware/authMiddleware");
 const { isAdmin } = require("../middleware/adminMiddleware");
@@ -14,6 +23,10 @@ router.post("/start", protect, startExam);
 
 // Student submits exam
 router.post("/submit", protect, submitExam);
+
+// Tab switch / rule violation
+router.post("/violation", protect, reportViolation);
+
 
 
 module.exports = router;
