@@ -1,15 +1,24 @@
 import Login from "./pages/Login";
-import Exam from "./pages/Exam";
+import StudentDashboard from "./pages/StudentsDashboard";
+import TeacherDashboard from "./pages/TeacherDashboard";
 
 function App() {
-  return (
-    <div>
-      <h2>Online Exam System</h2>
-      <Login />
-      <hr />
-      <Exam />
-    </div>
-  );
+  const token = localStorage.getItem("token");
+  const role = localStorage.getItem("role");
+
+  if (!token) {
+    return <Login />;
+  }
+
+  if (role === "student") {
+    return <StudentDashboard />;
+  }
+
+  if (role === "admin" || role === "teacher") {
+    return <TeacherDashboard />;
+  }
+
+  return <Login />;
 }
 
 export default App;
