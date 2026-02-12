@@ -1,9 +1,15 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
+const cors = require("cors");
+
+
 
 // Load env variables
 dotenv.config();
+
+
+
 
 // Import routes
 const authRoutes = require("./routes/authRoutes");
@@ -14,7 +20,8 @@ console.log("authRoutes import:", authRoutes);
 console.log("examRoutes import:", examRoutes);
 
 const app = express();
-
+app.use(cors());        // ADD THIS
+app.use(express.json());
 // Middleware
 app.use(express.json());
 
