@@ -6,7 +6,8 @@ const {
   startExam,
   submitExam,
   reportViolation,
-  joinExamByCode
+  joinExamByCode,
+  getExamById
 } = require("../controllers/examController");
 
 const controller = require("../controllers/examController");
@@ -29,6 +30,9 @@ router.post("/submit", protect, submitExam);
 router.post("/violation", protect, reportViolation);
 
 router.post("/join", protect, joinExamByCode);
+
+router.get("/:id", protect, getExamById);
+
 
 
 module.exports = router;
