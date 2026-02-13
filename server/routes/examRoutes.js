@@ -5,7 +5,8 @@ const {
   createExam,
   startExam,
   submitExam,
-  reportViolation
+  reportViolation,
+  joinExamByCode
 } = require("../controllers/examController");
 
 const controller = require("../controllers/examController");
@@ -27,6 +28,7 @@ router.post("/submit", protect, submitExam);
 // Tab switch / rule violation
 router.post("/violation", protect, reportViolation);
 
+router.post("/join", protect, joinExamByCode);
 
 
 module.exports = router;

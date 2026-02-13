@@ -1,34 +1,38 @@
-const Attempt = require("../models/Attempt");
 const Exam = require("../models/Exam");
+const Attempt = require("../models/Attempt");
 
-// CREATE EXAM
+
+const generateCode = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+// CREATE EXAM (TEACHER)
 const createExam = async (req, res) => {
   try {
     const { title, duration, rules } = req.body;
 
-    if (!title || !duration || !rules) {
-      return res.status(400).json({
-        message: "All fields are required"
-      });
+    if (!title || !duration) {
+      return res.status(400).json({ message: "Title and duration required" });
     }
 
     const exam = await Exam.create({
       title,
       duration,
       rules,
+      code: generateCode(),
       createdBy: req.user.id
     });
 
     res.status(201).json({
-      message: "Exam created successfully",
+      message: "Exam created",
       exam
     });
+
   } catch (error) {
-    res.status(500).json({
-      message: "Server error"
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
+
 // START EXAM (Student)
 const startExam = async (req, res) => {
   try {
@@ -147,13 +151,52 @@ const reportViolation = async (req, res) => {
   }
 };
 
+const joinExamByCode = async (req, res) => {
+  try {
+    const { code } = req.body;
+
+    if (!code) {
+      return res.status(400).json({ message: "Code required" });
+    }
+
+    const exam = await Exam.findOne({ code });
+
+    if (!exam) {
+      return res.status(404).json({ message: "Invalid test code" });
+    }
+
+   const attempt = await Attempt.create({
+  user: req.user.id,     
+  exam: exam._id,        
+  startTime: new Date(),
+  status: "started"      
+});
+
+
+
+    res.json({
+      message: "Exam joined",
+      examId: exam._id,
+      duration: exam.duration,
+      attempt
+    });
+
+  } catch (error) {
+    console.log(error);   // IMPORTANT for debugging
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
+
 
 
 module.exports = {
   createExam,
   startExam,
   submitExam,
-  reportViolation
+  reportViolation,
+  joinExamByCode   
 };
+
 
 
