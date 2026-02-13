@@ -1,24 +1,30 @@
+import Home from "./pages/Home";
 import Login from "./pages/Login";
-import StudentDashboard from "./pages/StudentsDashboard";
+import StudentsDashboard from "./pages/StudentsDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
+import ExamPage from "./pages/ExamPage";
 
 function App() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
+  const path = window.location.pathname;
 
+  // Not logged in
   if (!token) {
-    return <Login />;
+    if (path === "/login") return <Login />;
+    return <Home />;
   }
 
-  if (role === "student") {
-    return <StudentDashboard />;
+  // Exam page
+  if (path === "/exam") {
+    return <ExamPage />;
   }
 
-  if (role === "admin" || role === "teacher") {
-    return <TeacherDashboard />;
-  }
+  // Logged in dashboards
+  if (role === "student") return <StudentsDashboard />;
+  if (role === "admin" || role === "teacher") return <TeacherDashboard />;
 
-  return <Login />;
+  return <Home />;
 }
 
 export default App;

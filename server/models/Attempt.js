@@ -15,13 +15,10 @@ const attemptSchema = new mongoose.Schema({
     type: Date,
     default: Date.now
   },
-  endTime: {
-    type: Date
-  },
   status: {
     type: String,
-    enum: ["in-progress", "submitted", "timeout", "violation"],
-    default: "in-progress"
+    enum: ["started", "submitted", "violation"],
+    default: "started"
   }
 });
 
