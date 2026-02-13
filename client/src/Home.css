@@ -1,0 +1,15 @@
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(134, 171, 197, 0.4);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

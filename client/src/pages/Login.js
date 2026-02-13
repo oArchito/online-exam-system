@@ -4,7 +4,6 @@ import API from "../services/api";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [selectedRole, setSelectedRole] = useState("student");
 
   const handleLogin = async () => {
     try {
@@ -13,66 +12,91 @@ function Login() {
         password
       });
 
-      const backendRole = res.data.user.role;
-
-      // Check if selected role matches backend role
-      if (backendRole !== selectedRole && !(backendRole === "admin" && selectedRole === "teacher")) {
-        alert("You are not registered as " + selectedRole);
-        return;
-      }
-
       localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", backendRole);
+      localStorage.setItem("role", res.data.user.role);
 
-      window.location.reload();
-
+      window.location.href = "/";
     } catch (err) {
       alert(err.response?.data?.message || "Login failed");
     }
   };
 
   return (
-    <div>
-      <h3>Login</h3>
+    <div style={styles.page}>
+      <div style={styles.card}>
+        <h1 style={styles.title}>ExamGuard</h1>
+        <p style={styles.subtitle}>Login to continue</p>
 
-      <label>
         <input
-          type="radio"
-          value="student"
-          checked={selectedRole === "student"}
-          onChange={() => setSelectedRole("student")}
+          style={styles.input}
+          placeholder="Email"
+          onChange={(e) => setEmail(e.target.value)}
         />
-        Student
-      </label>
 
-      <label style={{ marginLeft: "10px" }}>
         <input
-          type="radio"
-          value="teacher"
-          checked={selectedRole === "teacher"}
-          onChange={() => setSelectedRole("teacher")}
+          style={styles.input}
+          type="password"
+          placeholder="Password"
+          onChange={(e) => setPassword(e.target.value)}
         />
-        Teacher
-      </label>
 
-      <br /><br />
-
-      <input
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <br /><br />
-
-      <input
-        placeholder="Password"
-        type="password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /><br />
-
-      <button onClick={handleLogin}>Login</button>
+        <button style={styles.button} onClick={handleLogin}>
+          Login
+        </button>
+      </div>
     </div>
   );
 }
+
+const styles = {
+  page: {
+    height: "100vh",
+    background: "#141514",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Segoe UI",
+    color: "#d8cec5"
+  },
+
+  card: {
+    background: "#4e514e",
+    padding: "40px",
+    borderRadius: "12px",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+    textAlign: "center",
+    width: "320px"
+  },
+
+  title: {
+    marginBottom: "5px"
+  },
+
+  subtitle: {
+    marginBottom: "20px",
+    opacity: 0.8
+  },
+
+  input: {
+    width: "100%",
+    padding: "10px",
+    marginBottom: "15px",
+    borderRadius: "6px",
+    border: "none",
+    fontSize: "15px"
+  },
+
+  button: {
+    width: "100%",
+    padding: "10px",
+    background: "#86abc5",
+    border: "none",
+    borderRadius: "6px",
+    fontSize: "16px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    color: "#141514"
+  }
+};
 
 export default Login;

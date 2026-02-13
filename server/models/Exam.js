@@ -1,5 +1,20 @@
 const mongoose = require("mongoose");
 
+const questionSchema = new mongoose.Schema({
+  question: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    enum: ["mcq", "theory"],
+    required: true
+  },
+  options: {
+    type: [String]
+  }
+});
+
 const examSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -9,17 +24,31 @@ const examSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  rules: {
-    type: String
-  },
-  code: {
-    type: String,
-    unique: true
-  },
+
+  code: String,
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
-  }
-}, { timestamps: true });
+  },
+
+  // NEW
+  rules: {
+    noTabSwitch: {
+      type: Boolean,
+      default: true
+    },
+    noCopyPaste: {
+      type: Boolean,
+      default: true
+    },
+    autoSubmitOnViolation: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  questions: [questionSchema]
+});
 
 module.exports = mongoose.model("Exam", examSchema);
