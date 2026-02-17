@@ -1,35 +1,36 @@
 const mongoose = require("mongoose");
 
-const answerSchema = new mongoose.Schema({
-  questionId: String,
-  answer: String
-});
-
 const attemptSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true
   },
-
   exam: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Exam",
     required: true
   },
-
+  answers: [
+    {
+      questionId: String,
+      answer: String
+    }
+  ],
+  score: {
+    type: Number,
+    default: 0
+  },
   status: {
     type: String,
-    enum: ["started", "submitted", "terminated"],
+    enum: ["started", "submitted", "auto-submitted"],
     default: "started"
   },
-
-  startTime: {
-    type: Date,
-    default: Date.now
-  },
-
-  answers: [answerSchema]   // NEW
+  startedAt: Date,
+  submittedAt: Date
 });
 
-module.exports = mongoose.model("Attempt", attemptSchema);
+// IMPORTANT FIX
+module.exports =
+  mongoose.models.Attempt ||
+  mongoose.model("Attempt", attemptSchema);

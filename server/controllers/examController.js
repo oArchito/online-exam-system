@@ -71,33 +71,64 @@ const startExam = async (req, res) => {
 // SUBMIT EXAM
 const submitExam = async (req, res) => {
   try {
-    console.log("BODY:", req.body);
     const { attemptId, answers } = req.body;
 
     const attempt = await Attempt.findById(attemptId);
 
     if (!attempt) {
-      return res.status(404).json({
-        message: "Attempt not found"
-      });
+      return res.status(404).json({ message: "Attempt not found" });
     }
 
+    if (attempt.status !== "started") {
+      return res.status(400).json({ message: "Exam already submitted" });
+    }
+
+    // Get exam
+    const exam = await Exam.findById(attempt.exam);
+
+    let score = 0;
+
+    // Calculate score using index
+   answers.forEach(ans => {
+  const index = Number(ans.questionId);
+  const question = exam.questions[index];
+
+  if (question && question.type === "mcq") {
+    if (
+      question.correctAnswer &&
+      ans.answer &&
+      question.correctAnswer.toString().trim() ===
+      ans.answer.toString().trim()
+    ) {
+      score++;
+    }
+  }
+});
+
+
+
+
+    // Save data
     attempt.answers = answers;
+    attempt.score = score;
     attempt.status = "submitted";
+    attempt.submittedAt = new Date();
 
     await attempt.save();
 
     res.json({
-      message: "Exam submitted successfully"
+      message: "Exam submitted successfully",
+      score,
+      total: exam.questions.length
     });
 
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      message: "Server error"
-    });
+    res.status(500).json({ message: "Server error" });
   }
 };
+
+
 
 
 // HANDLE TAB SWITCH / RULE VIOLATION
@@ -206,6 +237,30 @@ const getExamById = async (req, res) => {
   }
 };
 
+// GET RESULT FOR STUDENT
+const getResult = async (req, res) => {
+  try {
+    const { attemptId } = req.params;
+
+    const attempt = await Attempt.findById(attemptId)
+      .populate("exam", "title questions");
+
+    if (!attempt) {
+      return res.status(404).json({ message: "Attempt not found" });
+    }
+
+    res.json({
+      examTitle: attempt.exam.title,
+      score: attempt.score,
+      total: attempt.exam.questions.length,
+      status: attempt.status
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 
 module.exports = {
@@ -214,6 +269,7 @@ module.exports = {
   submitExam,
   reportViolation,
   joinExamByCode,
+  getResult,
   getExamById
 };
 
