@@ -3,6 +3,10 @@ import Login from "./pages/Login";
 import StudentsDashboard from "./pages/StudentsDashboard";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import ExamPage from "./pages/ExamPage";
+import Result from "./pages/Result";
+import MyResults from "./pages/MyResults";
+
+
 
 function App() {
   const token = localStorage.getItem("token");
@@ -20,11 +24,21 @@ function App() {
     return <ExamPage />;
   }
 
+  // Result page  ← ADD THIS
+  if (path === "/result") {
+    return <Result />;
+  }
+  if (path === "/my-results") {
+  return <MyResults />;
+}
+
+
   // Logged in dashboards
   if (role === "student") return <StudentsDashboard />;
   if (role === "admin" || role === "teacher") return <TeacherDashboard />;
 
   return <Home />;
 }
+
 
 export default App;

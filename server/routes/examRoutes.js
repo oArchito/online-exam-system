@@ -2,11 +2,12 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  createExam,
+ createExam,
   startExam,
   submitExam,
   reportViolation,
   joinExamByCode,
+  getMyResults,
   getResult,
   getExamById
 } = require("../controllers/examController");
@@ -32,11 +33,16 @@ router.post("/violation", protect, reportViolation);
 
 router.post("/join", protect, joinExamByCode);
 
-router.get("/:id", protect, getExamById);
+
+router.get("/my-results", protect, getMyResults);
 
 router.get("/result/:attemptId", protect, getResult);
 
+router.get("/:id", protect, getExamById);
+
 console.log("Exam Routes Loaded");
+
+
 
 
 module.exports = router;
