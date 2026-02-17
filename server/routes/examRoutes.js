@@ -7,6 +7,7 @@ const {
   submitExam,
   reportViolation,
   joinExamByCode,
+  getResult,
   getExamById
 } = require("../controllers/examController");
 
@@ -33,6 +34,9 @@ router.post("/join", protect, joinExamByCode);
 
 router.get("/:id", protect, getExamById);
 
+router.get("/result/:attemptId", protect, getResult);
+
+console.log("Exam Routes Loaded");
 
 
 module.exports = router;
