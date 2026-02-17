@@ -261,7 +261,19 @@ const getResult = async (req, res) => {
   }
 };
 
+const getMyResults = async (req, res) => {
+  try {
+    const attempts = await Attempt.find({
+      user: req.user.id,
+      status: "submitted"
+    }).populate("exam", "title");
 
+    res.json(attempts);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 module.exports = {
   createExam,
@@ -269,6 +281,7 @@ module.exports = {
   submitExam,
   reportViolation,
   joinExamByCode,
+  getMyResults,
   getResult,
   getExamById
 };

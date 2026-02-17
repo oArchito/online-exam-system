@@ -31,6 +31,9 @@ function StudentsDashboard() {
     localStorage.clear();
     window.location.reload();
   };
+    const goToResults = () => {
+    window.location.href = "/my-results";
+  };
 
   return (
     <div style={styles.page}>
@@ -71,8 +74,20 @@ function StudentsDashboard() {
             Upload PDF & Start
           </button>
         </div>
+         {/* Past Results Card */}
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>My Results</h2>
+          <p style={styles.text}>
+            View your past exam scores and performance.
+          </p>
+
+          <button style={styles.primaryBtn} onClick={goToResults}>
+            View Past Results
+          </button>
+        </div>
       </div>
     </div>
+      
   );
 }
 
