@@ -6,7 +6,7 @@ import ExamPage from "./pages/ExamPage";
 import Result from "./pages/Result";
 import MyResults from "./pages/MyResults";
 
-
+import TeacherResults from "./pages/TeacherResults";
 
 function App() {
   const token = localStorage.getItem("token");
@@ -31,7 +31,9 @@ function App() {
   if (path === "/my-results") {
   return <MyResults />;
 }
-
+if (path === "/teacher-results") {
+  return <TeacherResults />;
+}
 
   // Logged in dashboards
   if (role === "student") return <StudentsDashboard />;

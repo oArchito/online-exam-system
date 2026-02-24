@@ -9,7 +9,8 @@ const {
   joinExamByCode,
   getMyResults,
   getResult,
-  getExamById
+  getExamById,
+getAttemptsByCode
 } = require("../controllers/examController");
 
 const controller = require("../controllers/examController");
@@ -32,11 +33,13 @@ router.post("/submit", protect, submitExam);
 router.post("/violation", protect, reportViolation);
 
 router.post("/join", protect, joinExamByCode);
-
+router.get("/code/:code/attempts", protect, getAttemptsByCode);
 
 router.get("/my-results", protect, getMyResults);
 
 router.get("/result/:attemptId", protect, getResult);
+
+
 
 router.get("/:id", protect, getExamById);
 

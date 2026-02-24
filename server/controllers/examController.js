@@ -274,6 +274,36 @@ const getMyResults = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+// GET attempts by exam code (Teacher)
+const getAttemptsByCode = async (req, res) => {
+  try {
+    const { code } = req.params;
+
+    // Find exam using code
+    const exam = await Exam.findOne({ code });
+
+    if (!exam) {
+      return res.status(404).json({
+        message: "Exam not found"
+      });
+    }
+
+    // Get attempts
+    const attempts = await Attempt.find({ exam: exam._id })
+      .populate("user", "name email")
+      .populate("exam", "title duration");
+
+    res.json({
+      totalAttempts: attempts.length,
+      examTitle: exam.title,
+      attempts
+    });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
 
 module.exports = {
   createExam,
@@ -283,7 +313,8 @@ module.exports = {
   joinExamByCode,
   getMyResults,
   getResult,
-  getExamById
+  getExamById,
+  getAttemptsByCode
 };
 
 
