@@ -89,9 +89,10 @@ const submitExam = async (req, res) => {
     let score = 0;
 
     // Calculate score using index
-   answers.forEach(ans => {
-  const index = Number(ans.questionId);
-  const question = exam.questions[index];
+ answers.forEach(ans => {
+  const question = exam.questions.find(
+    q => q._id.toString() === ans.questionId.toString()
+  );
 
   if (question && question.type === "mcq") {
     if (

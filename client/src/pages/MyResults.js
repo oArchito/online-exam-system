@@ -39,7 +39,11 @@ function MyResults() {
           >
             <h3>{r.exam.title}</h3>
             <p>Score: {r.score}</p>
-            <p>Date: {new Date(r.startTime).toLocaleString()}</p>
+         <p>
+  Date: {r.submittedAt
+    ? new Date(r.submittedAt).toLocaleString()
+    : "N/A"}
+</p>
           </div>
         ))
       )}

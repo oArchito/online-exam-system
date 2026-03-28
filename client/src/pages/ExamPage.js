@@ -8,20 +8,19 @@ function ExamPage() {
 
   const examId = localStorage.getItem("examId");
   const attemptId = localStorage.getItem("attemptId");
-  const duration = localStorage.getItem("duration"); // minutes
+  const duration = localStorage.getItem("duration");
 
   // Fetch exam
   useEffect(() => {
     const fetchExam = async () => {
       const res = await API.get(`/exams/${examId}`);
       setExam(res.data);
-      setTimeLeft(duration * 60); // convert to seconds
+      setTimeLeft(duration * 60);
     };
-
     fetchExam();
   }, [examId, duration]);
 
-  // Timer countdown
+  // Timer
   useEffect(() => {
     if (!timeLeft) return;
 
@@ -29,7 +28,7 @@ function ExamPage() {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          submitExam(); // auto submit
+          submitExam();
           return 0;
         }
         return prev - 1;
@@ -49,23 +48,27 @@ function ExamPage() {
     };
 
     document.addEventListener("visibilitychange", handleVisibility);
-
     return () => {
       document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, []);
 
+  // ✅ FINAL MATCHED HANDLE ANSWER
   const handleAnswer = (index, value) => {
-    const updated = [...answers];
-    updated[index] = {
-      questionId: index,
-      answer: value
-    };
-    setAnswers(updated);
+  const updated = [...answers];
+
+  updated[index] = {
+    questionId: exam.questions[index]._id,
+    answer: value.trim() // ✅ EXACT MATCH
   };
+
+  setAnswers(updated);
+};
 
   const submitExam = async () => {
     try {
+      console.log("SUBMITTED:", answers);
+
       await API.post("/exams/submit", {
         attemptId,
         answers
@@ -88,8 +91,7 @@ function ExamPage() {
       <div style={styles.header}>
         <h2>{exam.title}</h2>
         <div style={styles.timer}>
-          Time Left: {minutes}:{seconds < 10 ? "0" : ""}
-          {seconds}
+          Time Left: {minutes}:{seconds < 10 ? "0" : ""}{seconds}
         </div>
       </div>
 
@@ -100,18 +102,20 @@ function ExamPage() {
               Q{index + 1}. {q.question}
             </p>
 
+            {/* ✅ MCQ */}
             {q.type === "mcq" &&
               q.options.map((opt, i) => (
                 <label key={i} style={styles.option}>
                   <input
                     type="radio"
-                    name={index}
-                    onChange={() => handleAnswer(index, opt)}
+                    name={`q-${index}`}
+                    onChange={() => handleAnswer(index, opt)} // ✅ TEXT
                   />
                   {opt}
                 </label>
               ))}
 
+            {/* ✅ THEORY */}
             {q.type === "theory" && (
               <textarea
                 style={styles.textarea}
@@ -141,13 +145,11 @@ const styles = {
     padding: "20px",
     fontFamily: "Segoe UI"
   },
-
   header: {
     display: "flex",
     justifyContent: "space-between",
     marginBottom: "20px"
   },
-
   timer: {
     background: "#86abc5",
     color: "#141514",
@@ -155,12 +157,10 @@ const styles = {
     borderRadius: "8px",
     fontWeight: "bold"
   },
-
   container: {
     maxWidth: "800px",
     margin: "auto"
   },
-
   card: {
     background: "#4e514e",
     padding: "20px",
@@ -168,17 +168,14 @@ const styles = {
     borderRadius: "10px",
     boxShadow: "0 4px 10px rgba(0,0,0,0.4)"
   },
-
   question: {
     marginBottom: "10px",
     fontWeight: "bold"
   },
-
   option: {
     display: "block",
     marginBottom: "5px"
   },
-
   textarea: {
     width: "100%",
     height: "80px",
@@ -186,12 +183,10 @@ const styles = {
     border: "none",
     padding: "8px"
   },
-
   submitArea: {
     textAlign: "center",
     marginTop: "20px"
   },
-
   submitBtn: {
     background: "#86abc5",
     color: "#141514",

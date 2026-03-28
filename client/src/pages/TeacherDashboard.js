@@ -9,9 +9,7 @@ function TeacherDashboard() {
       return;
     }
 
-    // Save examCode for TeacherResults
     localStorage.setItem("viewExamCode", examCode.trim());
-
     window.location.href = "/teacher-results";
   };
 
@@ -22,15 +20,26 @@ function TeacherDashboard() {
 
   return (
     <div style={styles.page}>
-      {/* Header */}
+      
+      {/* HEADER */}
       <div style={styles.header}>
         <h1 style={styles.title}>ExamGuard - Teacher</h1>
-        <button style={styles.logoutBtn} onClick={logout}>
-          Logout
-        </button>
+
+        <div style={styles.headerActions}>
+          <button
+            style={styles.createBtn}
+            onClick={() => (window.location.href = "/create-exam")}
+          >
+            + Create Exam
+          </button>
+
+          <button style={styles.logoutBtn} onClick={logout}>
+            Logout
+          </button>
+        </div>
       </div>
 
-      {/* Card */}
+      {/* MAIN CARD */}
       <div style={styles.card}>
         <h2 style={styles.cardTitle}>View Exam Attempts</h2>
 
@@ -57,44 +66,73 @@ const styles = {
     padding: "40px",
     fontFamily: "Segoe UI"
   },
+
   header: {
     display: "flex",
     justifyContent: "space-between",
-    marginBottom: "40px"
+    alignItems: "center",
+    marginBottom: "50px"
   },
+
   title: {
-    color: "#86abc5"
+    color: "#86abc5",
+    fontSize: "28px"
   },
+
+  headerActions: {
+    display: "flex",
+    gap: "15px"
+  },
+
+  createBtn: {
+    padding: "10px 18px",
+    background: "linear-gradient(135deg, #86abc5, #5f8aa6)",
+    border: "none",
+    borderRadius: "6px",
+    fontWeight: "bold",
+    cursor: "pointer",
+    color: "#141514"
+  },
+
   logoutBtn: {
     padding: "10px 18px",
-    background: "#86abc5",
+    background: "#4e514e",
     border: "none",
+    borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "bold"
+    color: "#d8cec5"
   },
+
   card: {
     background: "#4e514e",
-    padding: "25px",
-    borderRadius: "10px",
-    width: "420px"
+    padding: "30px",
+    borderRadius: "12px",
+    width: "420px",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.5)"
   },
+
   cardTitle: {
-    marginBottom: "15px"
+    marginBottom: "20px",
+    fontSize: "20px"
   },
+
   input: {
     width: "100%",
-    padding: "10px",
-    marginBottom: "12px",
-    borderRadius: "4px",
+    padding: "12px",
+    marginBottom: "15px",
+    borderRadius: "6px",
     border: "none"
   },
+
   primaryBtn: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     background: "#86abc5",
     border: "none",
+    borderRadius: "6px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#141514"
   }
 };
 
