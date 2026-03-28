@@ -4,6 +4,8 @@ import API from "../services/api";
 function StudentsDashboard() {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
+  const [file, setFile] = useState(null);
+  const [duration, setDuration]= useState("");
 
   const token = localStorage.getItem("token");
 
@@ -25,7 +27,33 @@ function StudentsDashboard() {
     setMessage(msg);
   }
 };
+const startPractice = async () => {
+  try {
+    if (!file || !duration) {
+      return alert("Upload PDF and enter duration");
+    }
 
+    const formData = new FormData();
+    formData.append("pdf", file);
+
+    const res = await API.post("/pdf/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data"
+      }
+    });
+
+    // Save data
+    localStorage.setItem("pdfUrl", res.data.fileUrl);
+    localStorage.setItem("practiceDuration", duration);
+
+    // Redirect
+    window.location.href = "/practice";
+
+  } catch (err) {
+    console.log(err);
+    alert("Upload failed");
+  }
+};
 
   const logout = () => {
     localStorage.clear();
@@ -65,15 +93,27 @@ function StudentsDashboard() {
 
         {/* Self Practice Card */}
         <div style={styles.card}>
-          <h2 style={styles.cardTitle}>Self Practice</h2>
-          <p style={styles.text}>
-            Upload your own question paper and practice with real exam timer.
-          </p>
+  <h2 style={styles.cardTitle}>Self Practice</h2>
 
-          <button style={styles.primaryBtn}>
-            Upload PDF & Start
-          </button>
-        </div>
+  <input
+    type="file"
+    accept="application/pdf"
+    onChange={(e) => setFile(e.target.files[0])}
+    style={styles.input}
+  />
+
+  <input
+    type="number"
+    placeholder="Enter duration (minutes)"
+    value={duration}
+    onChange={(e) => setDuration(e.target.value)}
+    style={styles.input}
+  />
+
+  <button style={styles.primaryBtn} onClick={startPractice}>
+    Start Practice
+  </button>
+</div>
          {/* Past Results Card */}
         <div style={styles.card}>
           <h2 style={styles.cardTitle}>My Results</h2>

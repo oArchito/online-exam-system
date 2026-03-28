@@ -2,42 +2,38 @@ const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
 const cors = require("cors");
+const path = require("path");
 
-
-
-// Load env variables
-dotenv.config();
-
-
-
-
-// Import routes
+// Routes
 const authRoutes = require("./routes/authRoutes");
 const examRoutes = require("./routes/examRoutes");
+const pdfRoutes = require("./routes/pdfRoutes");
 
-// Debug: check if routes are loading
-console.log("authRoutes import:", authRoutes);
-console.log("examRoutes import:", examRoutes);
+// Load env
+dotenv.config();
 
+// Init app
 const app = express();
-app.use(cors());        // ADD THIS
-app.use(express.json());
+
 // Middleware
+app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
+// Static folder (VERY IMPORTANT for file access)
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// Connect DB
 connectDB();
 
-// Root route (test)
+// Test route
 app.get("/", (req, res) => {
   res.send("Online Exam Backend Running");
 });
 
-// Mount routes
+// Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/exams", examRoutes);
-
-console.log("Routes mounted");
+app.use("/api/pdf", pdfRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;

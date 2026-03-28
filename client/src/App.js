@@ -5,7 +5,7 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import ExamPage from "./pages/ExamPage";
 import Result from "./pages/Result";
 import MyResults from "./pages/MyResults";
-
+import PracticePage from "./pages/PracticePage";
 import TeacherResults from "./pages/TeacherResults";
 
 function App() {
@@ -19,28 +19,18 @@ function App() {
     return <Home />;
   }
 
-  // Exam page
-  if (path === "/exam") {
-    return <ExamPage />;
-  }
+  // Pages
+  if (path === "/exam") return <ExamPage />;
+  if (path === "/result") return <Result />;
+  if (path === "/my-results") return <MyResults />;
+  if (path === "/teacher-results") return <TeacherResults />;
+  if (path === "/practice") return <PracticePage />; // ✅ FIXED (moved inside)
 
-  // Result page  ← ADD THIS
-  if (path === "/result") {
-    return <Result />;
-  }
-  if (path === "/my-results") {
-  return <MyResults />;
-}
-if (path === "/teacher-results") {
-  return <TeacherResults />;
-}
-
-  // Logged in dashboards
+  // Dashboards
   if (role === "student") return <StudentsDashboard />;
   if (role === "admin" || role === "teacher") return <TeacherDashboard />;
 
   return <Home />;
 }
-
 
 export default App;
