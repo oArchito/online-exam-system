@@ -25,7 +25,7 @@ function Login() {
     <div style={styles.page}>
       <div style={styles.card}>
         <h1 style={styles.title}>ExamGuard</h1>
-        <p style={styles.subtitle}>Login to continue</p>
+        <p style={styles.subtitle}>Secure Online Examination System</p>
 
         <input
           style={styles.input}
@@ -51,51 +51,58 @@ function Login() {
 const styles = {
   page: {
     height: "100vh",
-    background: "#141514",
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Segoe UI",
-    color: "#d8cec5"
+    fontFamily: "Segoe UI, sans-serif",
+    color: "#fff"
   },
 
   card: {
-    background: "#4e514e",
-    padding: "40px",
-    borderRadius: "12px",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.5)",
+    background: "rgba(255,255,255,0.08)",
+    padding: "45px",
+    borderRadius: "16px",
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
     textAlign: "center",
-    width: "320px"
+    width: "340px"
   },
 
   title: {
-    marginBottom: "5px"
+    marginBottom: "5px",
+    fontSize: "28px",
+    fontWeight: "600"
   },
 
   subtitle: {
-    marginBottom: "20px",
-    opacity: 0.8
+    marginBottom: "25px",
+    opacity: 0.8,
+    fontSize: "14px"
   },
 
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     marginBottom: "15px",
-    borderRadius: "6px",
+    borderRadius: "8px",
     border: "none",
-    fontSize: "15px"
+    outline: "none",
+    fontSize: "14px"
   },
 
   button: {
     width: "100%",
-    padding: "10px",
-    background: "#86abc5",
+    padding: "12px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "25px",
     fontSize: "16px",
     fontWeight: "bold",
     cursor: "pointer",
-    color: "#141514"
+    color: "#fff",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)",
+    transition: "0.3s"
   }
 };
 

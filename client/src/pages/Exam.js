@@ -25,17 +25,15 @@ function Exam() {
 
       localStorage.setItem("attemptId", res.data.attempt._id);
 
-      // duration comes from backend (minutes)
       setTimeLeft(res.data.duration * 60);
-
-      setMessage("Exam Started");
+      setMessage("✅ Exam Started");
 
     } catch (err) {
-      setMessage(err.response?.data?.message || "Failed to start exam");
+      setMessage(err.response?.data?.message || "❌ Failed to start exam");
     }
   };
 
-  // -------- Timer Logic --------
+  // -------- Timer --------
   useEffect(() => {
     if (timeLeft <= 0) return;
 
@@ -46,7 +44,7 @@ function Exam() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  // -------- Auto Submit when time = 0 --------
+  // -------- Auto Submit --------
   useEffect(() => {
     if (timeLeft === 0 && attemptId) {
       submitExam();
@@ -65,13 +63,13 @@ function Exam() {
         }
       );
 
-      setMessage("Exam Submitted (Time Over)");
+      setMessage("⏱ Exam Submitted (Time Over)");
     } catch (err) {
       console.log(err.response?.data);
     }
   };
 
-  // -------- Tab Switch Detection --------
+  // -------- Tab Switch --------
   useEffect(() => {
     const handleViolation = async () => {
       if (!attemptId) return;
@@ -87,7 +85,7 @@ function Exam() {
           }
         );
 
-        setMessage("Exam ended due to tab switching");
+        setMessage("⚠️ Exam ended due to tab switching");
       } catch (err) {
         console.log(err.response?.data);
       }
@@ -112,17 +110,87 @@ function Exam() {
     };
   }, [attemptId]);
 
+  // -------- FORMAT TIME --------
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = ("0" + (timeLeft % 60)).slice(-2);
+
   return (
-    <div>
-      <h3>Exam Page</h3>
+    <div style={styles.page}>
+      
+      <div style={styles.card}>
+        <h2 style={styles.title}>Exam Session</h2>
 
-      <button onClick={startExam}>Start Exam</button>
+        {/* TIMER */}
+        <div style={styles.timer}>
+          ⏱ {minutes}:{seconds}
+        </div>
 
-      <h4>Time Left: {timeLeft} seconds</h4>
+        {/* BUTTON */}
+        <button style={styles.button} onClick={startExam}>
+          Start Exam
+        </button>
 
-      <p>{message}</p>
+        {/* MESSAGE */}
+        {message && <p style={styles.message}>{message}</p>}
+      </div>
+
     </div>
   );
 }
+
+const styles = {
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontFamily: "Segoe UI, sans-serif",
+    color: "#fff"
+  },
+
+  card: {
+    background: "rgba(255,255,255,0.08)",
+    padding: "40px",
+    borderRadius: "16px",
+    textAlign: "center",
+    width: "350px",
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+  },
+
+  title: {
+    marginBottom: "20px",
+    fontSize: "24px",
+    fontWeight: "600"
+  },
+
+  timer: {
+    fontSize: "28px",
+    marginBottom: "20px",
+    background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
+    padding: "10px 20px",
+    borderRadius: "20px",
+    display: "inline-block"
+  },
+
+  button: {
+    width: "100%",
+    padding: "12px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    border: "none",
+    borderRadius: "25px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    color: "#fff",
+    fontSize: "16px",
+    marginBottom: "15px"
+  },
+
+  message: {
+    marginTop: "10px",
+    fontSize: "14px"
+  }
+};
 
 export default Exam;

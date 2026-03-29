@@ -23,7 +23,7 @@ function TeacherDashboard() {
       
       {/* HEADER */}
       <div style={styles.header}>
-        <h1 style={styles.title}>ExamGuard - Teacher</h1>
+        <h1 style={styles.title}>ExamGuard</h1>
 
         <div style={styles.headerActions}>
           <button
@@ -39,20 +39,22 @@ function TeacherDashboard() {
         </div>
       </div>
 
-      {/* MAIN CARD */}
-      <div style={styles.card}>
-        <h2 style={styles.cardTitle}>View Exam Attempts</h2>
+      {/* CENTER CARD */}
+      <div style={styles.centerWrapper}>
+        <div style={styles.card}>
+          <h2 style={styles.cardTitle}>View Exam Attempts</h2>
 
-        <input
-          style={styles.input}
-          placeholder="Enter Exam Code"
-          value={examCode}
-          onChange={(e) => setExamCode(e.target.value)}
-        />
+          <input
+            style={styles.input}
+            placeholder="Enter Exam Code"
+            value={examCode}
+            onChange={(e) => setExamCode(e.target.value)}
+          />
 
-        <button style={styles.primaryBtn} onClick={viewAttempts}>
-          View Attempts
-        </button>
+          <button style={styles.primaryBtn} onClick={viewAttempts}>
+            View Attempts
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -61,22 +63,27 @@ function TeacherDashboard() {
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#141514",
-    color: "#d8cec5",
-    padding: "40px",
-    fontFamily: "Segoe UI"
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    color: "#ffffff",
+    padding: "30px",
+    fontFamily: "Segoe UI, sans-serif"
   },
 
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "50px"
+    marginBottom: "40px",
+    padding: "15px 20px",
+    background: "rgba(255,255,255,0.05)",
+    borderRadius: "12px",
+    backdropFilter: "blur(10px)"
   },
 
   title: {
-    color: "#86abc5",
-    fontSize: "28px"
+    fontSize: "28px",
+    fontWeight: "600",
+    letterSpacing: "1px"
   },
 
   headerActions: {
@@ -85,54 +92,70 @@ const styles = {
   },
 
   createBtn: {
-    padding: "10px 18px",
-    background: "linear-gradient(135deg, #86abc5, #5f8aa6)",
+    padding: "10px 20px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "25px",
     fontWeight: "bold",
     cursor: "pointer",
-    color: "#141514"
+    color: "#fff",
+    transition: "0.3s",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
   },
 
   logoutBtn: {
-    padding: "10px 18px",
-    background: "#4e514e",
+    padding: "10px 20px",
+    background: "rgba(255,255,255,0.1)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "25px",
     cursor: "pointer",
-    color: "#d8cec5"
+    color: "#fff",
+    transition: "0.3s"
+  },
+
+  centerWrapper: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: "60px"
   },
 
   card: {
-    background: "#4e514e",
-    padding: "30px",
-    borderRadius: "12px",
+    background: "rgba(255,255,255,0.08)",
+    padding: "35px",
+    borderRadius: "16px",
     width: "420px",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.5)"
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
   },
 
   cardTitle: {
     marginBottom: "20px",
-    fontSize: "20px"
+    fontSize: "22px",
+    fontWeight: "600"
   },
 
   input: {
     width: "100%",
     padding: "12px",
     marginBottom: "15px",
-    borderRadius: "6px",
-    border: "none"
+    borderRadius: "8px",
+    border: "none",
+    outline: "none",
+    fontSize: "14px"
   },
 
   primaryBtn: {
     width: "100%",
     padding: "12px",
-    background: "#86abc5",
+    background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "25px",
     cursor: "pointer",
     fontWeight: "bold",
-    color: "#141514"
+    color: "#fff",
+    transition: "0.3s",
+    boxShadow: "0 5px 15px rgba(255,75,43,0.4)"
   }
 };
 

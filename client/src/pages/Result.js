@@ -28,33 +28,46 @@ function Result() {
   }, []);
 
   if (!result) {
-    return (
-      <div style={styles.loading}>
-        Loading Result...
-      </div>
-    );
+    return <div style={styles.loading}>Loading Result...</div>;
   }
 
   const percentage = Math.round(
     (result.score / result.total) * 100
   );
 
+  const isPass = percentage >= 40;
+
   return (
-    <div style={styles.container}>
+    <div style={styles.page}>
       <div style={styles.card}>
         <h2 style={styles.title}>Exam Result</h2>
 
         <h3 style={styles.examTitle}>{result.examTitle}</h3>
 
+        {/* SCORE */}
         <div style={styles.scoreBox}>
           <h1 style={styles.score}>
             {result.score} / {result.total}
           </h1>
-          <p style={styles.percent}>{percentage}%</p>
+
+          <p
+            style={{
+              ...styles.percent,
+              color: isPass ? "#4caf50" : "#ff4b2b"
+            }}
+          >
+            {percentage}%
+          </p>
         </div>
 
-        <p style={styles.status}>
-          Status: {result.status}
+        {/* STATUS */}
+        <p
+          style={{
+            ...styles.status,
+            color: isPass ? "#4caf50" : "#ff4b2b"
+          }}
+        >
+          {isPass ? "✅ Passed" : "❌ Failed"}
         </p>
 
         <button
@@ -69,61 +82,82 @@ function Result() {
 }
 
 const styles = {
-  container: {
-    backgroundColor: "#141514",
-    height: "100vh",
+  page: {
+    minHeight: "100vh",
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    fontFamily: "Segoe UI, sans-serif",
+    color: "#fff"
   },
+
   card: {
-    backgroundColor: "#4e514e",
+    background: "rgba(255,255,255,0.08)",
     padding: "40px",
-    borderRadius: "10px",
+    borderRadius: "16px",
     textAlign: "center",
-    color: "#d8cec5",
-    width: "350px",
-    boxShadow: "0 0 20px rgba(0,0,0,0.4)"
+    width: "360px",
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
   },
+
   title: {
-    color: "#86abc5",
-    marginBottom: "10px"
+    marginBottom: "10px",
+    fontSize: "26px",
+    fontWeight: "600"
   },
+
   examTitle: {
-    marginBottom: "20px"
+    marginBottom: "20px",
+    fontSize: "16px",
+    opacity: 0.8
   },
+
   scoreBox: {
-    backgroundColor: "#141514",
+    background: "rgba(0,0,0,0.3)",
     padding: "20px",
-    borderRadius: "8px",
+    borderRadius: "12px",
     marginBottom: "15px"
   },
+
   score: {
-    fontSize: "40px",
+    fontSize: "42px",
     margin: 0
   },
+
   percent: {
-    color: "#86abc5"
-  },
-  status: {
-    marginBottom: "20px"
-  },
-  button: {
-    backgroundColor: "#86abc5",
-    border: "none",
-    padding: "10px 20px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    color: "#141514",
+    fontSize: "18px",
+    marginTop: "5px",
     fontWeight: "bold"
   },
+
+  status: {
+    marginBottom: "20px",
+    fontSize: "16px",
+    fontWeight: "bold"
+  },
+
+  button: {
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    border: "none",
+    padding: "12px 25px",
+    borderRadius: "25px",
+    cursor: "pointer",
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: "15px",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+  },
+
   loading: {
-    backgroundColor: "#141514",
-    color: "#d8cec5",
-    height: "100vh",
+    minHeight: "100vh",
+    background: "#141514",
+    color: "#fff",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    fontSize: "18px"
   }
 };
 

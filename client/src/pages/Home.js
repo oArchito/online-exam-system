@@ -3,74 +3,103 @@ import "../Home.css";
 function Home() {
   return (
     <div style={styles.page}>
-      {/* Navbar */}
+      {/* NAVBAR */}
       <div style={styles.navbar}>
         <h2
-  style={styles.logo}
-  onClick={() => {
-    const role = localStorage.getItem("role");
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      window.location.href = "/";
-    } else if (role === "student") {
-      window.location.href = "/";
-    } else {
-      window.location.href = "/";
-    }
-  }}
->
-  ExamGuard
-</h2>
+          style={styles.logo}
+          onClick={() => {
+            const token = localStorage.getItem("token");
+            if (!token) {
+              window.location.href = "/";
+            } else {
+              window.location.href = "/";
+            }
+          }}
+        >
+          ExamGuard
+        </h2>
 
         <div>
-          <button style={styles.navBtn} onClick={() => window.location.href = "/login?role=student"}>
+          <button
+            style={styles.navBtn}
+            onClick={() => (window.location.href = "/login?role=student")}
+          >
             Student Login
           </button>
-          <button style={styles.navBtn} onClick={() => window.location.href = "/login?role=teacher"}>
+
+          <button
+            style={styles.navBtn}
+            onClick={() => (window.location.href = "/login?role=teacher")}
+          >
             Teacher Login
           </button>
         </div>
       </div>
 
-      {/* Hero Section */}
+      {/* HERO */}
       <div style={styles.hero}>
-        <h1 style={styles.title}>Secure Online Examination Platform</h1>
+        <h1 style={styles.title}>
+          Secure Online Examination Platform
+        </h1>
+
         <p style={styles.subtitle}>
-          Timed Exams • Tab Monitoring • Code-Based Access • Self Practice
+          Timed Exams • Tab Monitoring • Code-Based Access • PDF Practice
         </p>
 
         <div style={styles.buttonGroup}>
           <button
             style={styles.primaryBtn}
-            onClick={() => window.location.href = "/login?role=student"}
+            onClick={() => (window.location.href = "/login?role=student")}
           >
-            Login as Student
+            Get Started as Student
           </button>
 
           <button
-            style={styles.primaryBtn}
-            onClick={() => window.location.href = "/login?role=teacher"}
+            style={styles.secondaryBtn}
+            onClick={() => (window.location.href = "/login?role=teacher")}
           >
-            Login as Teacher
+            Teacher Dashboard
           </button>
         </div>
       </div>
 
-      {/* About Section */}
+      {/* FEATURES */}
+      <div style={styles.features}>
+        <div style={styles.featureCard}>
+          ⏱️ Timed Exams
+          <p style={styles.featureText}>
+            Auto submission after time ends
+          </p>
+        </div>
+
+        <div style={styles.featureCard}>
+          🚫 Tab Monitoring
+          <p style={styles.featureText}>
+            Prevent cheating via tab switch detection
+          </p>
+        </div>
+
+        <div style={styles.featureCard}>
+          📄 PDF Practice
+          <p style={styles.featureText}>
+            Upload PDFs and practice anytime
+          </p>
+        </div>
+      </div>
+
+      {/* ABOUT */}
       <div style={styles.about}>
         <h2>About ExamGuard</h2>
         <p>
-          ExamGuard is a secure online examination system that allows teachers
-          to create timed tests and students to attempt them with real-time
-          monitoring. It also provides self-practice mode using uploaded PDFs.
+          ExamGuard is a secure and scalable online examination system designed
+          for modern education. It ensures integrity using monitoring techniques
+          and provides a smooth experience for both students and teachers.
         </p>
       </div>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <div style={styles.footer}>
         <p>Contact: archit@example.com</p>
-        <p>Instagram: @examguard</p>
         <p>© 2026 ExamGuard</p>
       </div>
     </div>
@@ -79,79 +108,116 @@ function Home() {
 
 const styles = {
   page: {
-    background: "#141514",
-    color: "#d8cec5",
     minHeight: "100vh",
-    fontFamily: "Segoe UI"
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    color: "#fff",
+    fontFamily: "Segoe UI, sans-serif"
   },
 
   navbar: {
-    background: "#4e514e",
-    padding: "15px 40px",
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center"
+    alignItems: "center",
+    padding: "15px 40px",
+    background: "rgba(255,255,255,0.05)",
+    backdropFilter: "blur(10px)"
   },
 
   logo: {
-    margin: 0
+    margin: 0,
+    cursor: "pointer",
+    fontSize: "22px",
+    fontWeight: "600"
   },
 
   navBtn: {
     marginLeft: "10px",
-    padding: "8px 14px",
-    background: "#86abc5",
+    padding: "8px 16px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
     border: "none",
-    borderRadius: "6px",
+    borderRadius: "20px",
     cursor: "pointer",
     fontWeight: "bold",
-    color: "#141514"
+    color: "#fff"
   },
 
   hero: {
     textAlign: "center",
-    marginTop: "80px"
+    marginTop: "100px",
+    padding: "0 20px"
   },
 
   title: {
-    fontSize: "38px",
-    marginBottom: "15px"
+    fontSize: "42px",
+    marginBottom: "15px",
+    fontWeight: "600"
   },
 
   subtitle: {
     opacity: 0.8,
-    marginBottom: "30px"
+    marginBottom: "30px",
+    fontSize: "16px"
   },
 
   buttonGroup: {
     display: "flex",
     justifyContent: "center",
-    gap: "20px"
+    gap: "20px",
+    flexWrap: "wrap"
   },
 
   primaryBtn: {
-    padding: "14px 24px",
+    padding: "14px 28px",
     fontSize: "16px",
-    background: "#86abc5",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
     border: "none",
-    borderRadius: "8px",
+    borderRadius: "30px",
     cursor: "pointer",
     fontWeight: "bold",
-    color: "#141514",
-    transition: "0.2s"
+    color: "#fff",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+  },
+
+  secondaryBtn: {
+    padding: "14px 28px",
+    fontSize: "16px",
+    background: "rgba(255,255,255,0.1)",
+    border: "none",
+    borderRadius: "30px",
+    cursor: "pointer",
+    fontWeight: "bold",
+    color: "#fff"
+  },
+
+  features: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "25px",
+    marginTop: "80px",
+    flexWrap: "wrap"
+  },
+
+  featureCard: {
+    background: "rgba(255,255,255,0.08)",
+    padding: "25px",
+    borderRadius: "12px",
+    width: "220px",
+    textAlign: "center",
+    backdropFilter: "blur(10px)"
+  },
+
+  featureText: {
+    marginTop: "10px",
+    fontSize: "14px",
+    opacity: 0.8
   },
 
   about: {
-    marginTop: "120px",
+    marginTop: "100px",
     padding: "40px",
     textAlign: "center",
-    background: "#4e514e"
+    background: "rgba(255,255,255,0.05)"
   },
-  logo: {
-  margin: 0,
-  cursor: "pointer"
-},
-
 
   footer: {
     textAlign: "center",
@@ -160,7 +226,6 @@ const styles = {
     fontSize: "14px",
     opacity: 0.7
   }
-  
 };
 
 export default Home;

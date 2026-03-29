@@ -53,22 +53,51 @@ function ExamPage() {
     };
   }, []);
 
-  // ✅ FINAL MATCHED HANDLE ANSWER
+  // 🚫 COPY / PASTE / RIGHT CLICK BLOCK
+  useEffect(() => {
+    const preventCopyPaste = (e) => e.preventDefault();
+
+    const handleKeyDown = (e) => {
+      if (
+        (e.ctrlKey || e.metaKey) &&
+        ["c", "v", "x"].includes(e.key.toLowerCase())
+      ) {
+        e.preventDefault();
+        alert("Copy/Paste is disabled during exam");
+      }
+    };
+
+    const disableRightClick = (e) => e.preventDefault();
+
+    document.addEventListener("copy", preventCopyPaste);
+    document.addEventListener("paste", preventCopyPaste);
+    document.addEventListener("cut", preventCopyPaste);
+    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener("contextmenu", disableRightClick);
+
+    return () => {
+      document.removeEventListener("copy", preventCopyPaste);
+      document.removeEventListener("paste", preventCopyPaste);
+      document.removeEventListener("cut", preventCopyPaste);
+      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener("contextmenu", disableRightClick);
+    };
+  }, []);
+
+  // Handle answers
   const handleAnswer = (index, value) => {
-  const updated = [...answers];
+    const updated = [...answers];
 
-  updated[index] = {
-    questionId: exam.questions[index]._id,
-    answer: value.trim() // ✅ EXACT MATCH
+    updated[index] = {
+      questionId: exam.questions[index]._id,
+      answer: value.trim()
+    };
+
+    setAnswers(updated);
   };
-
-  setAnswers(updated);
-};
 
   const submitExam = async () => {
     try {
-      console.log("SUBMITTED:", answers);
-
       await API.post("/exams/submit", {
         attemptId,
         answers
@@ -91,7 +120,8 @@ function ExamPage() {
       <div style={styles.header}>
         <h2>{exam.title}</h2>
         <div style={styles.timer}>
-          Time Left: {minutes}:{seconds < 10 ? "0" : ""}{seconds}
+          Time Left: {minutes}:{seconds < 10 ? "0" : ""}
+          {seconds}
         </div>
       </div>
 
@@ -102,20 +132,20 @@ function ExamPage() {
               Q{index + 1}. {q.question}
             </p>
 
-            {/* ✅ MCQ */}
+            {/* MCQ */}
             {q.type === "mcq" &&
               q.options.map((opt, i) => (
                 <label key={i} style={styles.option}>
                   <input
                     type="radio"
                     name={`q-${index}`}
-                    onChange={() => handleAnswer(index, opt)} // ✅ TEXT
+                    onChange={() => handleAnswer(index, opt)}
                   />
                   {opt}
                 </label>
               ))}
 
-            {/* ✅ THEORY */}
+            {/* THEORY */}
             {q.type === "theory" && (
               <textarea
                 style={styles.textarea}
@@ -143,7 +173,8 @@ const styles = {
     minHeight: "100vh",
     color: "#d8cec5",
     padding: "20px",
-    fontFamily: "Segoe UI"
+    fontFamily: "Segoe UI",
+    userSelect: "none" // 🚫 disable selection globally
   },
   header: {
     display: "flex",
@@ -181,7 +212,8 @@ const styles = {
     height: "80px",
     borderRadius: "6px",
     border: "none",
-    padding: "8px"
+    padding: "8px",
+    userSelect: "text" // ✅ allow typing
   },
   submitArea: {
     textAlign: "center",

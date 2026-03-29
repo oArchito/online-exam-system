@@ -5,77 +5,77 @@ function StudentsDashboard() {
   const [code, setCode] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
-  const [duration, setDuration]= useState("");
+  const [duration, setDuration] = useState("");
 
   const token = localStorage.getItem("token");
 
- const joinTest = async () => {
-  try {
-    const res = await API.post("/exams/join", { code });
+  const joinTest = async () => {
+    try {
+      const res = await API.post("/exams/join", { code });
 
-    localStorage.setItem("attemptId", res.data.attempt._id);
-    localStorage.setItem("examId", res.data.examId);
-    localStorage.setItem("duration", res.data.duration);
+      localStorage.setItem("attemptId", res.data.attempt._id);
+      localStorage.setItem("examId", res.data.examId);
+      localStorage.setItem("duration", res.data.duration);
 
-    window.location.href = "/exam";
-
-  } catch (err) {
-    const msg =
-      err.response?.data?.message ||
-      "Unable to join exam";
-
-    setMessage(msg);
-  }
-};
-const startPractice = async () => {
-  try {
-    if (!file || !duration) {
-      return alert("Upload PDF and enter duration");
+      window.location.href = "/exam";
+    } catch (err) {
+      const msg = err.response?.data?.message || "Unable to join exam";
+      setMessage(msg);
     }
+  };
 
-    const formData = new FormData();
-    formData.append("pdf", file);
-
-    const res = await API.post("/pdf/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data"
+  const startPractice = async () => {
+    try {
+      if (!file || !duration) {
+        return alert("Upload PDF and enter duration");
       }
-    });
 
-    // Save data
-    localStorage.setItem("pdfUrl", res.data.fileUrl);
-    localStorage.setItem("practiceDuration", duration);
+      const formData = new FormData();
+      formData.append("pdf", file);
 
-    // Redirect
-    window.location.href = "/practice";
+      const res = await API.post("/pdf/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
 
-  } catch (err) {
-    console.log(err);
-    alert("Upload failed");
-  }
-};
+      localStorage.setItem("pdfUrl", res.data.fileUrl);
+      localStorage.setItem("practiceDuration", duration);
+
+      window.location.href = "/practice";
+    } catch (err) {
+      console.log(err);
+      alert("Upload failed");
+    }
+  };
 
   const logout = () => {
     localStorage.clear();
     window.location.reload();
   };
-    const goToResults = () => {
+
+  const goToResults = () => {
     window.location.href = "/my-results";
   };
 
   return (
     <div style={styles.page}>
+      
+      {/* HEADER */}
       <div style={styles.header}>
-        <h1 style={styles.logo}>Online Exam System</h1>
+        <h1 style={styles.logo}>ExamGuard</h1>
+
         <button style={styles.logoutBtn} onClick={logout}>
           Logout
         </button>
       </div>
 
+      {/* CARDS */}
       <div style={styles.container}>
-        {/* Join Test Card */}
+
+        {/* JOIN TEST */}
         <div style={styles.card}>
-          <h2 style={styles.cardTitle}>Join Assigned Test</h2>
+          <h2 style={styles.cardTitle}>Join Test</h2>
 
           <input
             style={styles.input}
@@ -91,124 +91,138 @@ const startPractice = async () => {
           {message && <p style={styles.error}>{message}</p>}
         </div>
 
-        {/* Self Practice Card */}
+        {/* PRACTICE */}
         <div style={styles.card}>
-  <h2 style={styles.cardTitle}>Self Practice</h2>
+          <h2 style={styles.cardTitle}>Practice with your Own PDF</h2>
 
-  <input
-    type="file"
-    accept="application/pdf"
-    onChange={(e) => setFile(e.target.files[0])}
-    style={styles.input}
-  />
+          <input
+            type="file"
+            accept="application/pdf"
+            onChange={(e) => setFile(e.target.files[0])}
+            style={styles.input}
+          />
 
-  <input
-    type="number"
-    placeholder="Enter duration (minutes)"
-    value={duration}
-    onChange={(e) => setDuration(e.target.value)}
-    style={styles.input}
-  />
+          <input
+            type="number"
+            placeholder="Duration (minutes)"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+            style={styles.input}
+          />
 
-  <button style={styles.primaryBtn} onClick={startPractice}>
-    Start Practice
-  </button>
-</div>
-         {/* Past Results Card */}
+          <button style={styles.primaryBtn} onClick={startPractice}>
+            Start Practice
+          </button>
+        </div>
+
+        {/* RESULTS */}
         <div style={styles.card}>
           <h2 style={styles.cardTitle}>My Results</h2>
+
           <p style={styles.text}>
-            View your past exam scores and performance.
+            View your past exam performance
           </p>
 
           <button style={styles.primaryBtn} onClick={goToResults}>
-            View Past Results
+            View Results
           </button>
         </div>
+
       </div>
     </div>
-      
   );
 }
 
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#141514",
-    color: "#d8cec5",
-    fontFamily: "Segoe UI, Arial",
-    padding: "20px"
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    color: "#fff",
+    fontFamily: "Segoe UI, sans-serif",
+    padding: "30px"
   },
 
   header: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "40px"
+    marginBottom: "40px",
+    padding: "15px 20px",
+    background: "rgba(255,255,255,0.05)",
+    borderRadius: "12px",
+    backdropFilter: "blur(10px)"
   },
 
   logo: {
-    margin: 0
+    margin: 0,
+    fontSize: "26px",
+    fontWeight: "600"
   },
 
   logoutBtn: {
-    background: "#d8cec5",
-    color: "#141514",
+    background: "rgba(255,255,255,0.1)",
+    color: "#fff",
     border: "none",
-    padding: "8px 16px",
-    borderRadius: "6px",
-    cursor: "pointer",
-    fontWeight: "bold"
+    padding: "10px 20px",
+    borderRadius: "20px",
+    cursor: "pointer"
   },
 
   container: {
     display: "flex",
     justifyContent: "center",
-    gap: "30px",
+    gap: "25px",
     flexWrap: "wrap"
   },
 
   card: {
-    background: "#4e514e",
-    padding: "30px",
-    borderRadius: "12px",
+    background: "rgba(255,255,255,0.08)",
+    padding: "25px",
+    borderRadius: "16px",
     width: "320px",
-    boxShadow: "0 6px 20px rgba(0,0,0,0.4)",
-    textAlign: "center"
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.4)",
+    textAlign: "center",
+    transition: "0.3s"
   },
 
   cardTitle: {
-    marginBottom: "15px"
+    marginBottom: "15px",
+    fontSize: "20px",
+    fontWeight: "600"
   },
 
   text: {
     fontSize: "14px",
-    marginBottom: "20px"
+    marginBottom: "20px",
+    color: "#ddd"
   },
 
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     marginBottom: "15px",
-    borderRadius: "6px",
+    borderRadius: "8px",
     border: "none",
-    fontSize: "15px"
+    outline: "none",
+    fontSize: "14px"
   },
 
   primaryBtn: {
     width: "100%",
-    padding: "10px",
-    background: "#86abc5",
-    color: "#141514",
+    padding: "12px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    color: "#fff",
     border: "none",
-    borderRadius: "6px",
-    fontSize: "16px",
+    borderRadius: "25px",
+    fontSize: "15px",
     cursor: "pointer",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
   },
 
   error: {
-    color: "#ff7a7a",
+    color: "#ff6b6b",
     marginTop: "10px",
     fontSize: "14px"
   }

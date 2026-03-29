@@ -91,7 +91,7 @@ function CreateExam() {
 
       setMessage(`✅ Exam Created! Code: ${res.data.code}`);
     } catch (err) {
-      setMessage("Error creating exam");
+      setMessage("❌ Error creating exam");
     }
   };
 
@@ -119,9 +119,14 @@ function CreateExam() {
 
         {questions.map((q, index) => (
           <div key={index} style={styles.card}>
+            
+            <p style={styles.questionLabel}>
+              Question {index + 1}
+            </p>
+
             <input
               style={styles.input}
-              placeholder={`Question ${index + 1}`}
+              placeholder="Enter question"
               value={q.question}
               onChange={(e) =>
                 handleQuestionChange(index, e.target.value)
@@ -141,7 +146,7 @@ function CreateExam() {
             ))}
 
             <select
-              style={styles.input}
+              style={{ ...styles.input, cursor: "pointer" }}
               value={q.answer}
               onChange={(e) =>
                 handleAnswerChange(index, e.target.value)
@@ -173,62 +178,90 @@ function CreateExam() {
 
 const styles = {
   page: {
-    background: "#141514",
+    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
     minHeight: "100vh",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
+    padding: "40px",
+    fontFamily: "Segoe UI, sans-serif",
+    color: "#fff"
   },
+
   container: {
-    width: "500px",
-    background: "#4e514e",
-    padding: "30px",
-    borderRadius: "12px",
-    color: "#d8cec5"
+    maxWidth: "700px",
+    margin: "auto",
+    background: "rgba(255,255,255,0.08)",
+    padding: "35px",
+    borderRadius: "16px",
+    backdropFilter: "blur(12px)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
   },
+
   heading: {
     textAlign: "center",
-    marginBottom: "20px",
-    color: "#86abc5"
+    marginBottom: "25px",
+    fontSize: "26px",
+    fontWeight: "600"
   },
+
   subHeading: {
-    marginTop: "20px"
+    marginTop: "25px",
+    marginBottom: "10px",
+    fontSize: "18px",
+    fontWeight: "500"
   },
+
   card: {
-    background: "#2a2b2a",
-    padding: "15px",
+    background: "rgba(255,255,255,0.06)",
+    padding: "18px",
     marginBottom: "15px",
-    borderRadius: "8px"
+    borderRadius: "12px",
+    boxShadow: "0 5px 15px rgba(0,0,0,0.3)"
   },
+
+  questionLabel: {
+    marginBottom: "6px",
+    fontWeight: "500"
+  },
+
   input: {
     width: "100%",
-    padding: "10px",
+    padding: "12px",
     marginBottom: "10px",
-    borderRadius: "6px",
-    border: "none"
+    borderRadius: "8px",
+    border: "none",
+    outline: "none",
+    fontSize: "14px"
   },
+
   primaryBtn: {
     width: "100%",
-    padding: "12px",
-    background: "#86abc5",
+    padding: "14px",
+    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
     border: "none",
+    borderRadius: "25px",
     fontWeight: "bold",
     cursor: "pointer",
-    borderRadius: "6px",
-    marginTop: "10px"
+    color: "#fff",
+    marginTop: "15px",
+    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
   },
+
   secondaryBtn: {
     width: "100%",
-    padding: "10px",
-    background: "#888",
+    padding: "12px",
+    background: "linear-gradient(135deg, #ff7e5f, #feb47b)",
     border: "none",
+    borderRadius: "25px",
     cursor: "pointer",
-    borderRadius: "6px",
-    marginTop: "10px"
+    fontWeight: "bold",
+    color: "#fff",
+    marginTop: "10px",
+    boxShadow: "0 5px 15px rgba(255,126,95,0.4)"
   },
+
   message: {
-    marginTop: "15px",
-    textAlign: "center"
+    marginTop: "20px",
+    textAlign: "center",
+    fontWeight: "bold"
   }
 };
 
