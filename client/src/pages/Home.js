@@ -7,14 +7,7 @@ function Home() {
       <div style={styles.navbar}>
         <h2
           style={styles.logo}
-          onClick={() => {
-            const token = localStorage.getItem("token");
-            if (!token) {
-              window.location.href = "/";
-            } else {
-              window.location.href = "/";
-            }
-          }}
+          onClick={() => (window.location.href = "/")}
         >
           ExamGuard
         </h2>
@@ -22,16 +15,24 @@ function Home() {
         <div>
           <button
             style={styles.navBtn}
-            onClick={() => (window.location.href = "/login?role=student")}
+            onClick={() => (window.location.href = "/login")}
           >
             Student Login
           </button>
 
           <button
             style={styles.navBtn}
-            onClick={() => (window.location.href = "/login?role=teacher")}
+            onClick={() => (window.location.href = "/login")}
           >
             Teacher Login
+          </button>
+
+          {/* ✅ NEW SIGNUP BUTTON */}
+          <button
+            style={styles.navBtn}
+            onClick={() => (window.location.href = "/signup")}
+          >
+            Signup
           </button>
         </div>
       </div>
@@ -49,16 +50,16 @@ function Home() {
         <div style={styles.buttonGroup}>
           <button
             style={styles.primaryBtn}
-            onClick={() => (window.location.href = "/login?role=student")}
+            onClick={() => (window.location.href = "/signup")}
           >
-            Get Started as Student
+            Get Started
           </button>
 
           <button
             style={styles.secondaryBtn}
-            onClick={() => (window.location.href = "/login?role=teacher")}
+            onClick={() => (window.location.href = "/login")}
           >
-            Teacher Dashboard
+            Login
           </button>
         </div>
       </div>

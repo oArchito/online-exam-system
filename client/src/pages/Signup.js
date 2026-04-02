@@ -1,32 +1,39 @@
 import { useState } from "react";
 import API from "../services/api";
 
-function Login() {
+function Signup() {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [role, setRole] = useState("student");
 
-  const handleLogin = async () => {
+  const handleSignup = async () => {
     try {
-      const res = await API.post("/auth/login", {
+      await API.post("/auth/register", {
+        name,
         email,
-        password
+        password,
+        role
       });
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("role", res.data.user.role);
-
-      // ✅ redirect to dashboard
-      window.location.href = "/";
+      alert("Signup successful");
+      window.location.href = "/login";
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed");
+      alert(err.response?.data?.message || "Signup failed");
     }
   };
 
   return (
     <div style={styles.page}>
       <div style={styles.card}>
-        <h1 style={styles.title}>ExamGuard</h1>
-        <p style={styles.subtitle}>Secure Online Examination System</p>
+        <h1 style={styles.title}>Create Account</h1>
+        <p style={styles.subtitle}>Join ExamGuard platform</p>
+
+        <input
+          style={styles.input}
+          placeholder="Full Name"
+          onChange={(e) => setName(e.target.value)}
+        />
 
         <input
           style={styles.input}
@@ -41,18 +48,26 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button style={styles.button} onClick={handleLogin}>
-          Login
+        <select
+  style={styles.select}
+  value={role}
+  onChange={(e) => setRole(e.target.value)}
+>
+  <option value="student">Student</option>
+  <option value="admin">Teacher</option>
+</select>
+
+        <button style={styles.button} onClick={handleSignup}>
+          Signup
         </button>
 
-        {/* ✅ CLEAN TEXT LIKE YOUR DESIGN */}
-        <p style={styles.signupText}>
-          Don't have an account?{" "}
+        <p style={styles.loginText}>
+          Already have an account?{" "}
           <span
             style={styles.link}
-            onClick={() => (window.location.href = "/signup")}
+            onClick={() => (window.location.href = "/login")}
           >
-            Signup
+            Login
           </span>
         </p>
       </div>
@@ -73,7 +88,7 @@ const styles = {
 
   card: {
     background: "rgba(255,255,255,0.08)",
-    padding: "45px",
+    padding: "40px",
     borderRadius: "16px",
     backdropFilter: "blur(12px)",
     boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
@@ -83,7 +98,7 @@ const styles = {
 
   title: {
     marginBottom: "5px",
-    fontSize: "28px",
+    fontSize: "26px",
     fontWeight: "600"
   },
 
@@ -117,17 +132,30 @@ const styles = {
     transition: "0.3s"
   },
 
-  signupText: {
-    marginTop: "18px",
-    fontSize: "14px",
-    color: "rgba(255,255,255,0.7)"
+  loginText: {
+    marginTop: "15px",
+    fontSize: "13px",
+    opacity: 0.8
   },
 
   link: {
     color: "#00c6ff",
     cursor: "pointer",
-    fontWeight: "600"
-  }
+    fontWeight: "bold"
+  },
+  select: {
+  width: "100%",
+  padding: "12px",
+  marginBottom: "15px",
+  borderRadius: "8px",
+  border: "none",
+  outline: "none",
+  fontSize: "14px",
+  background: "rgba(231, 224, 224, 0.56)",
+  color: "#030c2f",
+  appearance: "none", // removes default arrow
+  cursor: "pointer"
+}
 };
 
-export default Login;
+export default Signup;
