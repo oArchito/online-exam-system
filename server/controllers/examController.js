@@ -1,6 +1,8 @@
 const Exam = require("../models/Exam");
 const Attempt = require("../models/Attempt");
 
+// ✅ IMPORT AI
+const { evaluateAnswer } = require("./aiController");
 
 const generateCode = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -39,21 +41,16 @@ const createExam = async (req, res) => {
   }
 };
 
-
-
-
-// START EXAM (Student)
+// START EXAM
 const startExam = async (req, res) => {
   try {
     const { examId } = req.body;
 
-    // check exam exists
     const exam = await Exam.findById(examId);
     if (!exam) {
       return res.status(404).json({ message: "Exam not found" });
     }
 
-    // create attempt
     const attempt = await Attempt.create({
       user: req.user.id,
       exam: examId
@@ -68,10 +65,14 @@ const startExam = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// SUBMIT EXAM
+
+
+// 🔥 UPDATED SUBMIT EXAM (FINAL FIX)
 const submitExam = async (req, res) => {
   try {
     const { attemptId, answers } = req.body;
+
+    console.log("📥 Incoming Answers:", answers);
 
     const attempt = await Attempt.findById(attemptId);
 
@@ -83,33 +84,71 @@ const submitExam = async (req, res) => {
       return res.status(400).json({ message: "Exam already submitted" });
     }
 
-    // Get exam
     const exam = await Exam.findById(attempt.exam);
 
     let score = 0;
 
-    // Calculate score using index
- answers.forEach(ans => {
-  const question = exam.questions.find(
-    q => q._id.toString() === ans.questionId.toString()
-  );
+    for (let ans of answers) {
+      console.log("➡️ Processing answer:", ans);
 
-  if (question && question.type === "mcq") {
-    if (
-      question.correctAnswer &&
-      ans.answer &&
-      question.correctAnswer.toString().trim() ===
-      ans.answer.toString().trim()
-    ) {
-      score++;
+      const question = exam.questions.find(
+        q => q._id.toString() === ans.questionId.toString()
+      );
+
+      console.log("🔍 Matched Question:", question);
+
+      if (!question) continue;
+
+      const type = question.type?.toLowerCase();
+      console.log("📌 Question Type:", type);
+
+      // ✅ MCQ
+      if (type === "mcq") {
+        if (
+          question.correctAnswer &&
+          ans.answer &&
+          question.correctAnswer.toString().trim() ===
+          ans.answer.toString().trim()
+        ) {
+          score++;
+          ans.score = 1;
+        } else {
+          ans.score = 0;
+        }
+      }
+
+      // 🔥 THEORY (AI FIXED)
+      else if (type === "theory") {
+        console.log("🧠 THEORY BLOCK ENTERED");
+
+        try {
+          const aiResult = await evaluateAnswer(
+            question.question,
+            ans.answer
+          );
+
+          console.log("🤖 AI RESULT:", aiResult);
+
+          if (aiResult && aiResult.score !== undefined) {
+            score += aiResult.score;
+
+            ans.score = aiResult.score;
+            ans.feedback = aiResult.feedback;
+          } else {
+            console.log("⚠️ Invalid AI response");
+            ans.score = 0;
+            ans.feedback = "AI evaluation failed";
+          }
+
+        } catch (err) {
+          console.log("❌ AI ERROR:", err.message);
+          ans.score = 0;
+          ans.feedback = "Error evaluating answer";
+        }
+      }
     }
-  }
-});
 
-
-
-
-    // Save data
+    // SAVE
     attempt.answers = answers;
     attempt.score = score;
     attempt.status = "submitted";
@@ -130,9 +169,7 @@ const submitExam = async (req, res) => {
 };
 
 
-
-
-// HANDLE TAB SWITCH / RULE VIOLATION
+// باقي same
 const reportViolation = async (req, res) => {
   try {
     const { attemptId } = req.body;
@@ -143,12 +180,10 @@ const reportViolation = async (req, res) => {
       return res.status(404).json({ message: "Attempt not found" });
     }
 
-    // Only same user can report
     if (attempt.user.toString() !== req.user.id) {
       return res.status(403).json({ message: "Not authorized" });
     }
 
-    // If already finished, do nothing
     if (attempt.status !== "in-progress") {
       return res.status(400).json({ message: "Exam already finished" });
     }
@@ -172,7 +207,9 @@ const joinExamByCode = async (req, res) => {
   try {
     const { code } = req.body;
 
-    const exam = await Exam.findOne({ code });
+    const exam = await Exam.findOne({
+      code: code?.trim().toUpperCase()
+    });
 
     if (!exam) {
       return res.status(404).json({
@@ -180,7 +217,6 @@ const joinExamByCode = async (req, res) => {
       });
     }
 
-    // NEW: check existing attempt
     const existingAttempt = await Attempt.findOne({
       user: req.user.id,
       exam: exam._id
@@ -192,7 +228,6 @@ const joinExamByCode = async (req, res) => {
       });
     }
 
-    // create new attempt
     const attempt = await Attempt.create({
       user: req.user.id,
       exam: exam._id,
@@ -214,8 +249,6 @@ const joinExamByCode = async (req, res) => {
   }
 };
 
-
-// GET EXAM DETAILS (for student)
 const getExamById = async (req, res) => {
   try {
     const { id } = req.params;
@@ -238,7 +271,6 @@ const getExamById = async (req, res) => {
   }
 };
 
-// GET RESULT FOR STUDENT
 const getResult = async (req, res) => {
   try {
     const { attemptId } = req.params;
@@ -254,7 +286,8 @@ const getResult = async (req, res) => {
       examTitle: attempt.exam.title,
       score: attempt.score,
       total: attempt.exam.questions.length,
-      status: attempt.status
+      status: attempt.status,
+      answers: attempt.answers
     });
 
   } catch (error) {
@@ -275,12 +308,11 @@ const getMyResults = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
-// GET attempts by exam code (Teacher)
+
 const getAttemptsByCode = async (req, res) => {
   try {
     const { code } = req.params;
 
-    // Find exam using code
     const exam = await Exam.findOne({ code });
 
     if (!exam) {
@@ -289,7 +321,6 @@ const getAttemptsByCode = async (req, res) => {
       });
     }
 
-    // Get attempts
     const attempts = await Attempt.find({ exam: exam._id })
       .populate("user", "name email")
       .populate("exam", "title duration");
@@ -317,7 +348,3 @@ module.exports = {
   getExamById,
   getAttemptsByCode
 };
-
-
-
-

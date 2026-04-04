@@ -147,12 +147,18 @@ function ExamPage() {
 
             {/* THEORY */}
             {q.type === "theory" && (
-              <textarea
-                style={styles.textarea}
-                onChange={(e) =>
-                  handleAnswer(index, e.target.value)
-                }
-              />
+               <div>
+                   <p style={styles.theoryLabel}>Write your answer:</p>
+
+                      <textarea
+                            style={styles.textarea}
+                                 placeholder="Type your answer here..."
+                                    onChange={(e) =>
+                                      handleAnswer(index, e.target.value)
+                                   }
+                            />
+                 </div>
+
             )}
           </div>
         ))}
@@ -207,14 +213,7 @@ const styles = {
     display: "block",
     marginBottom: "5px"
   },
-  textarea: {
-    width: "100%",
-    height: "80px",
-    borderRadius: "6px",
-    border: "none",
-    padding: "8px",
-    userSelect: "text" // ✅ allow typing
-  },
+
   submitArea: {
     textAlign: "center",
     marginTop: "20px"
@@ -228,7 +227,27 @@ const styles = {
     fontSize: "16px",
     fontWeight: "bold",
     cursor: "pointer"
-  }
+  },
+  theoryLabel: {
+  marginBottom: "8px",
+  fontSize: "14px",
+  color: "#ccc"
+},
+
+textarea: {
+  width: "100%",
+  height: "100px",
+  borderRadius: "8px",
+  border: "none",
+  padding: "10px",
+  fontSize: "14px",
+  background: "#fff",
+  color: "#000",
+  resize: "none",
+  outline: "none",
+  userSelect: "text"
+}
+
 };
 
 export default ExamPage;

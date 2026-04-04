@@ -17,9 +17,9 @@ function CreateExam() {
 
   const token = localStorage.getItem("token");
 
-  const handleQuestionChange = (index, value) => {
+  const handleQuestionChange = (index, field, value) => {
     const updated = [...questions];
-    updated[index].question = value;
+    updated[index][field] = value;
     setQuestions(updated);
   };
 
@@ -52,8 +52,13 @@ function CreateExam() {
 
     for (let q of questions) {
       if (!q.question.trim()) return "Question missing";
-      if (q.options.some(opt => !opt.trim())) return "Fill all options";
-      if (!q.answer) return "Select correct answer";
+
+      // MCQ validation only
+      if (q.type === "mcq") {
+        if (q.options.some(opt => !opt.trim()))
+          return "Fill all options";
+        if (!q.answer) return "Select correct answer";
+      }
     }
 
     return null;
@@ -67,12 +72,21 @@ function CreateExam() {
     }
 
     try {
-      const formattedQuestions = questions.map(q => ({
-        question: q.question.trim(),
-        options: q.options.map(opt => opt.trim()),
-        correctAnswer: q.answer.trim(),
-        type: "mcq"
-      }));
+      const formattedQuestions = questions.map(q => {
+        if (q.type === "theory") {
+          return {
+            question: q.question.trim(),
+            type: "theory"
+          };
+        }
+
+        return {
+          question: q.question.trim(),
+          options: q.options.map(opt => opt.trim()),
+          correctAnswer: q.answer.trim(),
+          type: "mcq"
+        };
+      });
 
       const res = await API.post(
         "/exams",
@@ -119,7 +133,6 @@ function CreateExam() {
 
         {questions.map((q, index) => (
           <div key={index} style={styles.card}>
-            
             <p style={styles.questionLabel}>
               Question {index + 1}
             </p>
@@ -129,36 +142,60 @@ function CreateExam() {
               placeholder="Enter question"
               value={q.question}
               onChange={(e) =>
-                handleQuestionChange(index, e.target.value)
+                handleQuestionChange(index, "question", e.target.value)
               }
             />
 
-            {q.options.map((opt, i) => (
-              <input
-                key={i}
-                style={styles.input}
-                placeholder={`Option ${i + 1}`}
-                value={opt}
-                onChange={(e) =>
-                  handleOptionChange(index, i, e.target.value)
-                }
-              />
-            ))}
-
+            {/* 🔥 TYPE SELECT */}
             <select
               style={{ ...styles.input, cursor: "pointer" }}
-              value={q.answer}
+              value={q.type}
               onChange={(e) =>
-                handleAnswerChange(index, e.target.value)
+                handleQuestionChange(index, "type", e.target.value)
               }
             >
-              <option value="">Select Correct Answer</option>
-              {q.options.map((opt, i) => (
-                <option key={i} value={opt}>
-                  {opt}
-                </option>
-              ))}
+              <option value="mcq">MCQ</option>
+              <option value="theory">Theory</option>
             </select>
+
+            {/* 🔥 MCQ ONLY */}
+            {q.type === "mcq" && (
+              <>
+                {q.options.map((opt, i) => (
+                  <input
+                    key={i}
+                    style={styles.input}
+                    placeholder={`Option ${i + 1}`}
+                    value={opt}
+                    onChange={(e) =>
+                      handleOptionChange(index, i, e.target.value)
+                    }
+                  />
+                ))}
+
+                <select
+                  style={{ ...styles.input, cursor: "pointer" }}
+                  value={q.answer}
+                  onChange={(e) =>
+                    handleAnswerChange(index, e.target.value)
+                  }
+                >
+                  <option value="">Select Correct Answer</option>
+                  {q.options.map((opt, i) => (
+                    <option key={i} value={opt}>
+                      {opt}
+                    </option>
+                  ))}
+                </select>
+              </>
+            )}
+
+            {/* 🔥 THEORY INFO */}
+            {q.type === "theory" && (
+              <p style={{ fontSize: "13px", opacity: 0.7 }}>
+                Student will write answer (AI will evaluate)
+              </p>
+            )}
           </div>
         ))}
 
