@@ -146,7 +146,8 @@ function Home() {
 
       {/* FOOTER */}
       <div style={current.footer}>
-        <p>Contact: archit@example.com</p>
+        <p>Contact: architaggarwal661@gmail.com</p>
+        <p>Contact No.: 1234567890</p>
         <p>© 2026 ExamGuard</p>
       </div>
     </div>
