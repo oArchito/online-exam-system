@@ -4,8 +4,15 @@ import API from "../services/api";
 function Exam() {
   const [message, setMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState(0);
+  const [dark, setDark] = useState(false);
+
+useEffect(() => {
+  const saved = localStorage.getItem("theme");
+  if (saved === "dark") setDark(true);
+}, []);
 
   const token = localStorage.getItem("token");
+  const current = dark ? darkStyles : styles;
   const attemptId = localStorage.getItem("attemptId");
 
   // -------- Start Exam --------
@@ -115,23 +122,23 @@ function Exam() {
   const seconds = ("0" + (timeLeft % 60)).slice(-2);
 
   return (
-    <div style={styles.page}>
+    <div style={current.page}>
       
-      <div style={styles.card}>
-        <h2 style={styles.title}>Exam Session</h2>
+      <div style={current.card}>
+        <h2 style={current.title}>Exam Session</h2>
 
         {/* TIMER */}
-        <div style={styles.timer}>
+        <div style={current.timer}>
           ⏱ {minutes}:{seconds}
         </div>
 
         {/* BUTTON */}
-        <button style={styles.button} onClick={startExam}>
+        <button style={current.button} onClick={startExam}>
           Start Exam
         </button>
 
         {/* MESSAGE */}
-        {message && <p style={styles.message}>{message}</p>}
+        {message && <p style={current.message}>{message}</p>}
       </div>
 
     </div>

@@ -5,12 +5,17 @@ function ExamPage() {
   const [exam, setExam] = useState(null);
   const [answers, setAnswers] = useState([]);
   const [timeLeft, setTimeLeft] = useState(0);
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   const examId = localStorage.getItem("examId");
   const attemptId = localStorage.getItem("attemptId");
   const duration = localStorage.getItem("duration");
 
-  // Fetch exam
   useEffect(() => {
     const fetchExam = async () => {
       const res = await API.get(`/exams/${examId}`);
@@ -20,7 +25,6 @@ function ExamPage() {
     fetchExam();
   }, [examId, duration]);
 
-  // Timer
   useEffect(() => {
     if (!timeLeft) return;
 
@@ -38,7 +42,6 @@ function ExamPage() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  // Tab switch detection
   useEffect(() => {
     const handleVisibility = () => {
       if (document.hidden) {
@@ -53,7 +56,6 @@ function ExamPage() {
     };
   }, []);
 
-  // 🚫 COPY / PASTE / RIGHT CLICK BLOCK
   useEffect(() => {
     const preventCopyPaste = (e) => e.preventDefault();
 
@@ -84,7 +86,6 @@ function ExamPage() {
     };
   }, []);
 
-  // Handle answers
   const handleAnswer = (index, value) => {
     const updated = [...answers];
 
@@ -115,27 +116,28 @@ function ExamPage() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
-      <div style={styles.header}>
+    <div style={current.page}>
+      <div style={current.header}>
         <h2>{exam.title}</h2>
-        <div style={styles.timer}>
+        <div style={current.timer}>
           Time Left: {minutes}:{seconds < 10 ? "0" : ""}
           {seconds}
         </div>
       </div>
 
-      <div style={styles.container}>
+      <div style={current.container}>
         {exam.questions.map((q, index) => (
-          <div key={index} style={styles.card}>
-            <p style={styles.question}>
+          <div key={index} style={current.card}>
+            <p style={current.question}>
               Q{index + 1}. {q.question}
             </p>
 
-            {/* MCQ */}
             {q.type === "mcq" &&
               q.options.map((opt, i) => (
-                <label key={i} style={styles.option}>
+                <label key={i} style={current.option}>
                   <input
                     type="radio"
                     name={`q-${index}`}
@@ -145,27 +147,25 @@ function ExamPage() {
                 </label>
               ))}
 
-            {/* THEORY */}
             {q.type === "theory" && (
-               <div>
-                   <p style={styles.theoryLabel}>Write your answer:</p>
+              <div>
+                <p style={current.theoryLabel}>Write your answer:</p>
 
-                      <textarea
-                            style={styles.textarea}
-                                 placeholder="Type your answer here..."
-                                    onChange={(e) =>
-                                      handleAnswer(index, e.target.value)
-                                   }
-                            />
-                 </div>
-
+                <textarea
+                  style={current.textarea}
+                  placeholder="Type your answer here..."
+                  onChange={(e) =>
+                    handleAnswer(index, e.target.value)
+                  }
+                />
+              </div>
             )}
           </div>
         ))}
       </div>
 
-      <div style={styles.submitArea}>
-        <button style={styles.submitBtn} onClick={submitExam}>
+      <div style={current.submitArea}>
+        <button style={current.submitBtn} onClick={submitExam}>
           Submit Exam
         </button>
       </div>
@@ -173,14 +173,15 @@ function ExamPage() {
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
-    background: "#141514",
+    background: "#f5f7fa",
     minHeight: "100vh",
-    color: "#d8cec5",
+    color: "#111",
     padding: "20px",
     fontFamily: "Segoe UI",
-    userSelect: "none" // 🚫 disable selection globally
+    userSelect: "none"
   },
   header: {
     display: "flex",
@@ -188,8 +189,8 @@ const styles = {
     marginBottom: "20px"
   },
   timer: {
-    background: "#86abc5",
-    color: "#141514",
+    background: "#3b82f6",
+    color: "#fff",
     padding: "8px 15px",
     borderRadius: "8px",
     fontWeight: "bold"
@@ -199,11 +200,11 @@ const styles = {
     margin: "auto"
   },
   card: {
-    background: "#4e514e",
+    background: "#fff",
     padding: "20px",
     marginBottom: "20px",
     borderRadius: "10px",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.4)"
+    boxShadow: "0 4px 10px rgba(0,0,0,0.1)"
   },
   question: {
     marginBottom: "10px",
@@ -213,41 +214,54 @@ const styles = {
     display: "block",
     marginBottom: "5px"
   },
-
   submitArea: {
     textAlign: "center",
     marginTop: "20px"
   },
   submitBtn: {
-    background: "#86abc5",
-    color: "#141514",
+    background: "#3b82f6",
+    color: "#fff",
     padding: "12px 30px",
     border: "none",
     borderRadius: "8px",
-    fontSize: "16px",
     fontWeight: "bold",
     cursor: "pointer"
   },
   theoryLabel: {
-  marginBottom: "8px",
-  fontSize: "14px",
-  color: "#ccc"
-},
+    marginBottom: "8px",
+    fontSize: "14px"
+  },
+  textarea: {
+    width: "100%",
+    height: "100px",
+    borderRadius: "8px",
+    border: "1px solid #ccc",
+    padding: "10px"
+  }
+};
 
-textarea: {
-  width: "100%",
-  height: "100px",
-  borderRadius: "8px",
-  border: "none",
-  padding: "10px",
-  fontSize: "14px",
-  background: "#fff",
-  color: "#000",
-  resize: "none",
-  outline: "none",
-  userSelect: "text"
-}
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
 
+  page: {
+    ...styles.page,
+    background: "#0f172a",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "#1e293b",
+    color: "#fff"
+  },
+
+  textarea: {
+    ...styles.textarea,
+    background: "#1e293b",
+    color: "#fff",
+    border: "1px solid #334155"
+  }
 };
 
 export default ExamPage;

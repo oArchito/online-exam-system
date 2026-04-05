@@ -3,6 +3,13 @@ import { getMyResults } from "../services/api";
 
 function MyResults() {
   const [results, setResults] = useState([]);
+  const [dark, setDark] = useState(false);
+
+  // ✅ theme sync
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   useEffect(() => {
     fetchResults();
@@ -18,26 +25,28 @@ function MyResults() {
     }
   };
 
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
-      <div style={styles.container}>
-        <h2 style={styles.heading}>My Results</h2>
+    <div style={current.page}>
+      <div style={current.container}>
+        <h2 style={current.heading}>My Results</h2>
 
         {results.length === 0 ? (
-          <div style={styles.emptyCard}>
+          <div style={current.emptyCard}>
             <p>No exams attempted yet</p>
           </div>
         ) : (
           results.map((r) => (
-            <div key={r._id} style={styles.card}>
+            <div key={r._id} style={current.card}>
               
-              <h3 style={styles.title}>{r.exam.title}</h3>
+              <h3 style={current.title}>{r.exam.title}</h3>
 
-              <p style={styles.score}>
+              <p style={current.score}>
                 Score: <span>{r.score}</span>
               </p>
 
-              <p style={styles.date}>
+              <p style={current.date}>
                 📅{" "}
                 {r.submittedAt
                   ? new Date(r.submittedAt).toLocaleString()
@@ -52,13 +61,14 @@ function MyResults() {
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
     padding: "40px",
     fontFamily: "Segoe UI, sans-serif",
-    color: "#fff"
+    color: "#111"
   },
 
   container: {
@@ -74,12 +84,11 @@ const styles = {
   },
 
   card: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.7)",
     padding: "20px",
     borderRadius: "14px",
     marginBottom: "15px",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.4)"
+    boxShadow: "0 8px 20px rgba(0,0,0,0.2)"
   },
 
   title: {
@@ -95,14 +104,41 @@ const styles = {
 
   date: {
     fontSize: "14px",
-    opacity: 0.8
+    opacity: 0.7
   },
 
   emptyCard: {
     textAlign: "center",
     padding: "30px",
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.7)",
     borderRadius: "12px"
+  }
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "rgba(255,255,255,0.05)",
+    boxShadow: "0 8px 20px rgba(0,0,0,0.6)"
+  },
+
+  emptyCard: {
+    ...styles.emptyCard,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  date: {
+    ...styles.date,
+    color: "#ccc"
   }
 };
 

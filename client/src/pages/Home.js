@@ -1,35 +1,82 @@
 import "../Home.css";
+import { useEffect, useState } from "react";
 
 function Home() {
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = !dark;
+    setDark(newTheme);
+
+    if (newTheme) {
+      document.body.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
+    <div style={current.page}>
       {/* NAVBAR */}
-      <div style={styles.navbar}>
-        <h2
-          style={styles.logo}
+      <div style={current.navbar}>
+        {/* TEXT LOGO + SLOGAN */}
+        <div
+          style={{ cursor: "pointer", lineHeight: "1.2" }}
           onClick={() => (window.location.href = "/")}
         >
-          ExamGuard
-        </h2>
+          <div
+            style={{
+              ...current.logo,
+              fontWeight: "700",
+              fontSize: "22px",
+            }}
+          >
+            ExamGuard
+          </div>
+
+          <div
+            style={{
+              fontSize: "10px",
+              color: dark ? "#94a3b8" : "#6b7280",
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Secure • Monitor • Evaluate
+          </div>
+        </div>
 
         <div>
+          {/* 🌗 TOGGLE */}
+          <button style={current.toggleBtn} onClick={toggleTheme}>
+            {dark ? "🌙" : "☀️"}
+          </button>
+
           <button
-            style={styles.navBtn}
+            style={current.navBtn}
             onClick={() => (window.location.href = "/login")}
           >
             Student Login
           </button>
 
           <button
-            style={styles.navBtn}
+            style={current.navBtn}
             onClick={() => (window.location.href = "/login")}
           >
             Teacher Login
           </button>
 
-          {/* ✅ NEW SIGNUP BUTTON */}
           <button
-            style={styles.navBtn}
+            style={current.navBtn}
             onClick={() => (window.location.href = "/signup")}
           >
             Signup
@@ -38,25 +85,25 @@ function Home() {
       </div>
 
       {/* HERO */}
-      <div style={styles.hero}>
-        <h1 style={styles.title}>
+      <div style={current.hero}>
+        <h1 style={current.title}>
           Secure Online Examination Platform
         </h1>
 
-        <p style={styles.subtitle}>
+        <p style={current.subtitle}>
           Timed Exams • Tab Monitoring • Code-Based Access • PDF Practice
         </p>
 
-        <div style={styles.buttonGroup}>
+        <div style={current.buttonGroup}>
           <button
-            style={styles.primaryBtn}
+            style={current.primaryBtn}
             onClick={() => (window.location.href = "/signup")}
           >
             Get Started
           </button>
 
           <button
-            style={styles.secondaryBtn}
+            style={current.secondaryBtn}
             onClick={() => (window.location.href = "/login")}
           >
             Login
@@ -65,41 +112,40 @@ function Home() {
       </div>
 
       {/* FEATURES */}
-      <div style={styles.features}>
-        <div style={styles.featureCard}>
+      <div style={current.features}>
+        <div style={current.featureCard}>
           ⏱️ Timed Exams
-          <p style={styles.featureText}>
+          <p style={current.featureText}>
             Auto submission after time ends
           </p>
         </div>
 
-        <div style={styles.featureCard}>
+        <div style={current.featureCard}>
           🚫 Tab Monitoring
-          <p style={styles.featureText}>
+          <p style={current.featureText}>
             Prevent cheating via tab switch detection
           </p>
         </div>
 
-        <div style={styles.featureCard}>
+        <div style={current.featureCard}>
           📄 PDF Practice
-          <p style={styles.featureText}>
+          <p style={current.featureText}>
             Upload PDFs and practice anytime
           </p>
         </div>
       </div>
 
       {/* ABOUT */}
-      <div style={styles.about}>
+      <div style={current.about}>
         <h2>About ExamGuard</h2>
         <p>
           ExamGuard is a secure and scalable online examination system designed
-          for modern education. It ensures integrity using monitoring techniques
-          and provides a smooth experience for both students and teachers.
+          for modern education.
         </p>
       </div>
 
       {/* FOOTER */}
-      <div style={styles.footer}>
+      <div style={current.footer}>
         <p>Contact: archit@example.com</p>
         <p>© 2026 ExamGuard</p>
       </div>
@@ -107,87 +153,83 @@ function Home() {
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "#fff",
-    fontFamily: "Segoe UI, sans-serif"
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    color: "#111",
+    fontFamily: "Segoe UI, sans-serif",
+    transition: "0.3s",
   },
 
   navbar: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
     padding: "15px 40px",
-    background: "rgba(255,255,255,0.05)",
-    backdropFilter: "blur(10px)"
+    alignItems: "center",
+    backdropFilter: "blur(10px)",
   },
 
   logo: {
-    margin: 0,
     cursor: "pointer",
-    fontSize: "22px",
-    fontWeight: "600"
   },
 
   navBtn: {
     marginLeft: "10px",
     padding: "8px 16px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
-    border: "none",
     borderRadius: "20px",
+    border: "none",
     cursor: "pointer",
-    fontWeight: "bold",
-    color: "#fff"
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    color: "#fff",
+  },
+
+  toggleBtn: {
+    marginRight: "10px",
+    padding: "6px 10px",
+    borderRadius: "50%",
+    border: "none",
+    cursor: "pointer",
+    background: "#111",
+    color: "#fff",
   },
 
   hero: {
     textAlign: "center",
     marginTop: "100px",
-    padding: "0 20px"
   },
 
   title: {
     fontSize: "42px",
-    marginBottom: "15px",
-    fontWeight: "600"
   },
 
   subtitle: {
-    opacity: 0.8,
-    marginBottom: "30px",
-    fontSize: "16px"
+    opacity: 0.7,
   },
 
   buttonGroup: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "20px",
-    flexWrap: "wrap"
+    marginTop: "20px",
   },
 
   primaryBtn: {
     padding: "14px 28px",
-    fontSize: "16px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
-    border: "none",
     borderRadius: "30px",
-    cursor: "pointer",
-    fontWeight: "bold",
+    border: "none",
+    marginRight: "10px",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
     color: "#fff",
-    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+    boxShadow: "0 5px 15px rgba(99,102,241,0.4)",
+    cursor: "pointer",
   },
 
   secondaryBtn: {
     padding: "14px 28px",
-    fontSize: "16px",
-    background: "rgba(255,255,255,0.1)",
-    border: "none",
     borderRadius: "30px",
+    border: "none",
+    background: "#ccc",
+    color: "#111",
     cursor: "pointer",
-    fontWeight: "bold",
-    color: "#fff"
   },
 
   features: {
@@ -195,38 +237,56 @@ const styles = {
     justifyContent: "center",
     gap: "25px",
     marginTop: "80px",
-    flexWrap: "wrap"
+    flexWrap: "wrap",
   },
 
   featureCard: {
-    background: "rgba(255,255,255,0.08)",
     padding: "25px",
     borderRadius: "12px",
     width: "220px",
     textAlign: "center",
-    backdropFilter: "blur(10px)"
+    background: "rgba(255,255,255,0.6)",
+    backdropFilter: "blur(10px)",
   },
 
   featureText: {
-    marginTop: "10px",
     fontSize: "14px",
-    opacity: 0.8
+    opacity: 0.8,
   },
 
   about: {
-    marginTop: "100px",
+    marginTop: "80px",
     padding: "40px",
     textAlign: "center",
-    background: "rgba(255,255,255,0.05)"
   },
 
   footer: {
     textAlign: "center",
     padding: "20px",
-    marginTop: "40px",
-    fontSize: "14px",
-    opacity: 0.7
-  }
+    opacity: 0.7,
+  },
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff",
+  },
+
+  secondaryBtn: {
+    ...styles.secondaryBtn,
+    background: "#334155",
+    color: "#fff",
+  },
+
+  featureCard: {
+    ...styles.featureCard,
+    background: "rgba(255,255,255,0.05)",
+  },
 };
 
 export default Home;

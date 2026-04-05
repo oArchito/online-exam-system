@@ -1,7 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 function TeacherDashboard() {
   const [examCode, setExamCode] = useState("");
+  const [dark, setDark] = useState(false);
+
+  // ✅ theme sync
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   const viewAttempts = () => {
     if (!examCode) {
@@ -13,58 +20,81 @@ function TeacherDashboard() {
     window.location.href = "/teacher-results";
   };
 
-  const logout = () => {
-    localStorage.clear();
-    window.location.reload();
-  };
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.reload();
+};
+
+  const current = dark ? darkStyles : styles;
 
   return (
-    <div style={styles.page}>
+    <div style={current.page}>
       
       {/* HEADER */}
-      <div style={styles.header}>
-        <h1 style={styles.title}>ExamGuard</h1>
+      <div style={current.header}>
+        <h1 style={current.title}>ExamGuard</h1>
 
-        <div style={styles.headerActions}>
+        <div style={current.headerActions}>
           <button
-            style={styles.createBtn}
+            style={current.createBtn}
             onClick={() => (window.location.href = "/create-exam")}
           >
             + Create Exam
           </button>
 
-          <button style={styles.logoutBtn} onClick={logout}>
+          <button style={current.logoutBtn} onClick={logout}>
             Logout
           </button>
         </div>
       </div>
 
+      {/* HERO */}
+      <div style={current.hero}>
+        <h2>Teacher Dashboard 👨‍🏫</h2>
+        <p>Create exams, monitor students, and analyze results easily</p>
+      </div>
+
       {/* CENTER CARD */}
-      <div style={styles.centerWrapper}>
-        <div style={styles.card}>
-          <h2 style={styles.cardTitle}>View Exam Attempts</h2>
+      <div style={current.centerWrapper}>
+        <div style={current.card}>
+          <h2 style={current.cardTitle}>View Exam Attempts</h2>
 
           <input
-            style={styles.input}
+            style={current.input}
             placeholder="Enter Exam Code"
             value={examCode}
             onChange={(e) => setExamCode(e.target.value)}
           />
 
-          <button style={styles.primaryBtn} onClick={viewAttempts}>
+          <button style={current.primaryBtn} onClick={viewAttempts}>
             View Attempts
           </button>
         </div>
       </div>
+
+      {/* FOOTER */}
+      <div style={current.footer}>
+        <h3>About ExamGuard</h3>
+        <p>
+          ExamGuard helps teachers create secure exams, monitor activity,
+          and evaluate performance efficiently using modern tools.
+        </p>
+        <p style={{ marginTop: "10px", opacity: 0.6 }}>
+          © 2026 ExamGuard • Smart Examination Platform
+        </p>
+      </div>
+
     </div>
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "#ffffff",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    color: "#111",
     padding: "30px",
     fontFamily: "Segoe UI, sans-serif"
   },
@@ -73,17 +103,12 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "40px",
-    padding: "15px 20px",
-    background: "rgba(255,255,255,0.05)",
-    borderRadius: "12px",
-    backdropFilter: "blur(10px)"
+    marginBottom: "20px"
   },
 
   title: {
     fontSize: "28px",
-    fontWeight: "600",
-    letterSpacing: "1px"
+    fontWeight: "700"
   },
 
   headerActions: {
@@ -93,46 +118,44 @@ const styles = {
 
   createBtn: {
     padding: "10px 20px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
     border: "none",
     borderRadius: "25px",
     fontWeight: "bold",
     cursor: "pointer",
-    color: "#fff",
-    transition: "0.3s",
-    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+    color: "#fff"
   },
 
   logoutBtn: {
     padding: "10px 20px",
-    background: "rgba(255,255,255,0.1)",
+    background: "#e5e7eb",
     border: "none",
     borderRadius: "25px",
-    cursor: "pointer",
-    color: "#fff",
-    transition: "0.3s"
+    cursor: "pointer"
+  },
+
+  hero: {
+    textAlign: "center",
+    marginBottom: "40px"
   },
 
   centerWrapper: {
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    marginTop: "60px"
+    justifyContent: "center"
   },
 
   card: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.8)",
     padding: "35px",
-    borderRadius: "16px",
+    borderRadius: "18px",
     width: "420px",
-    backdropFilter: "blur(12px)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)"
+    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
+    textAlign: "center"
   },
 
   cardTitle: {
     marginBottom: "20px",
-    fontSize: "22px",
-    fontWeight: "600"
+    fontSize: "22px"
   },
 
   input: {
@@ -140,22 +163,54 @@ const styles = {
     padding: "12px",
     marginBottom: "15px",
     borderRadius: "8px",
-    border: "none",
-    outline: "none",
-    fontSize: "14px"
+    border: "1px solid #ccc"
   },
 
   primaryBtn: {
     width: "100%",
     padding: "12px",
-    background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
+    background: "linear-gradient(135deg, #ef4444, #dc2626)",
     border: "none",
     borderRadius: "25px",
     cursor: "pointer",
     fontWeight: "bold",
+    color: "#fff"
+  },
+
+  footer: {
+    marginTop: "80px",
+    textAlign: "center",
+    padding: "30px",
+    background: "rgba(0,0,0,0.05)",
+    borderRadius: "12px"
+  }
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  input: {
+    ...styles.input,
+    background: "#1e293b",
     color: "#fff",
-    transition: "0.3s",
-    boxShadow: "0 5px 15px rgba(255,75,43,0.4)"
+    border: "1px solid #334155"
+  },
+
+  footer: {
+    ...styles.footer,
+    background: "rgba(255,255,255,0.05)"
   }
 };
 

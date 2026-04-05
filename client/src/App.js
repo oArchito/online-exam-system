@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -14,21 +15,25 @@ function App() {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("role");
 
-  // 🔥 IMPORTANT: handles /login?role=...
+  // ✅ GLOBAL THEME APPLY
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+
+    if (saved === "dark") {
+      document.body.classList.add("dark");
+    } else {
+      document.body.classList.remove("dark");
+    }
+  }, []);
+
   const path = window.location.pathname;
 
-  // =========================
-  // NOT LOGGED IN
-  // =========================
   if (!token) {
     if (path.startsWith("/login")) return <Login />;
     if (path.startsWith("/signup")) return <Signup />;
     return <Home />;
   }
 
-  // =========================
-  // COMMON PAGES
-  // =========================
   if (path === "/exam") return <ExamPage />;
   if (path === "/result") return <Result />;
   if (path === "/my-results") return <MyResults />;
@@ -36,15 +41,9 @@ function App() {
   if (path === "/practice") return <PracticePage />;
   if (path === "/create-exam") return <CreateExam />;
 
-  // =========================
-  // DASHBOARDS
-  // =========================
   if (role === "student") return <StudentsDashboard />;
-
-  // 🔥 IMPORTANT: teacher = admin
   if (role === "admin") return <TeacherDashboard />;
 
-  // fallback
   return <Home />;
 }
 
