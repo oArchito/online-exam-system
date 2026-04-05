@@ -11,7 +11,7 @@ const uploadPDF = (req, res) => {
     res.status(200).json({
       message: "PDF uploaded successfully",
       file: req.file,
-      fileUrl: `http://localhost:5000/uploads/${req.file.filename}`
+      fileUrl: `https://online-exam-system-w05s.onrender.com/uploads/${req.file.filename}`
     });
 
   } catch (error) {
