@@ -33,7 +33,31 @@ const logout = () => {
       
       {/* HEADER */}
       <div style={current.header}>
-        <h1 style={current.title}>ExamGuard</h1>
+        <div
+          style={{ cursor: "pointer", lineHeight: "1.2" }}
+          onClick={() => (window.location.href = "/")}
+        >
+          <div
+            style={{
+              ...current.logo,
+              fontWeight: "700",
+              fontSize: "22px",
+            }}
+          >
+            ExamGuard
+          </div>
+
+          <div
+            style={{
+              fontSize: "10px",
+              color: dark ? "#94a3b8" : "#6b7280",
+              letterSpacing: "1.5px",
+              textTransform: "uppercase",
+            }}
+          >
+            Secure • Monitor • Evaluate
+          </div>
+        </div>
 
         <div style={current.headerActions}>
           <button
