@@ -5,8 +5,15 @@ function TeacherResults() {
   const [attempts, setAttempts] = useState([]);
   const [examTitle, setExamTitle] = useState("");
   const [total, setTotal] = useState(0);
+  const [dark, setDark] = useState(false);
 
   const examCode = localStorage.getItem("viewExamCode");
+
+  // ✅ theme sync
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   useEffect(() => {
     if (!examCode) {
@@ -38,20 +45,23 @@ function TeacherResults() {
     window.location.href = "/teacher";
   };
 
-  return (
-    <div style={styles.page}>
-      
-      <h1 style={styles.title}>Exam Analytics</h1>
+  const current = dark ? darkStyles : styles;
 
-      {/* SUMMARY CARD */}
-      <div style={styles.card}>
+  return (
+    <div style={current.page}>
+      
+      {/* HEADER */}
+      <h1 style={current.title}>Exam Analytics 📊</h1>
+
+      {/* SUMMARY */}
+      <div style={current.card}>
         <h2>{examTitle || "Exam Results"}</h2>
         <p>Total Attempts: <strong>{total}</strong></p>
       </div>
 
       {/* TABLE */}
-      <div style={styles.tableContainer}>
-        <table style={styles.table}>
+      <div style={current.tableContainer}>
+        <table style={current.table}>
           <thead>
             <tr>
               <th>Name</th>
@@ -64,16 +74,16 @@ function TeacherResults() {
 
           <tbody>
             {attempts.map((a) => (
-              <tr key={a._id} style={styles.row}>
+              <tr key={a._id} style={current.row}>
                 <td>{a.user?.name}</td>
                 <td>{a.user?.email}</td>
-                <td style={styles.score}>{a.score}</td>
+                <td style={current.score}>{a.score}</td>
                 <td
                   style={{
                     color:
                       a.status === "submitted"
-                        ? "#4caf50"
-                        : "#ff9800"
+                        ? "#22c55e"
+                        : "#f59e0b"
                   }}
                 >
                   {a.status}
@@ -89,43 +99,52 @@ function TeacherResults() {
         </table>
       </div>
 
-      <button style={styles.backBtn} onClick={goBack}>
+      {/* BUTTON */}
+      <button style={current.backBtn} onClick={goBack}>
         ← Back to Dashboard
       </button>
+
+      {/* FOOTER */}
+      <div style={current.footer}>
+        <p>
+          ExamGuard Analytics provides insights into student performance,
+          helping educators make better decisions.
+        </p>
+        <p style={{ opacity: 0.6 }}>© 2026 ExamGuard</p>
+      </div>
     </div>
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "#fff",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    color: "#111",
     padding: "40px",
     fontFamily: "Segoe UI, sans-serif"
   },
 
   title: {
     marginBottom: "20px",
-    fontSize: "28px",
-    fontWeight: "600"
+    fontSize: "30px",
+    fontWeight: "700"
   },
 
   card: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.8)",
     padding: "20px",
-    borderRadius: "12px",
+    borderRadius: "14px",
     marginBottom: "20px",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.4)"
+    boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
   },
 
   tableContainer: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.8)",
     padding: "20px",
-    borderRadius: "12px",
-    backdropFilter: "blur(10px)",
-    boxShadow: "0 8px 20px rgba(0,0,0,0.4)",
+    borderRadius: "14px",
+    boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
     overflowX: "auto"
   },
 
@@ -135,24 +154,62 @@ const styles = {
   },
 
   row: {
-    borderBottom: "1px solid rgba(255,255,255,0.1)"
+    borderBottom: "1px solid #ddd"
   },
 
   score: {
     fontWeight: "bold",
-    color: "#00c6ff"
+    color: "#3b82f6"
   },
 
   backBtn: {
     marginTop: "25px",
     padding: "12px 25px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
     border: "none",
     borderRadius: "25px",
     cursor: "pointer",
     fontWeight: "bold",
-    color: "#fff",
-    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+    color: "#fff"
+  },
+
+  footer: {
+    marginTop: "60px",
+    textAlign: "center",
+    padding: "20px",
+    background: "rgba(0,0,0,0.05)",
+    borderRadius: "12px"
+  }
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  tableContainer: {
+    ...styles.tableContainer,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  row: {
+    ...styles.row,
+    borderBottom: "1px solid rgba(255,255,255,0.1)"
+  },
+
+  footer: {
+    ...styles.footer,
+    background: "rgba(255,255,255,0.05)"
   }
 };
 

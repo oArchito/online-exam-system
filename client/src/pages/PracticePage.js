@@ -5,9 +5,13 @@ function PracticePage() {
   const duration = localStorage.getItem("practiceDuration");
 
   const [timeLeft, setTimeLeft] = useState(Number(duration) * 60);
+  const [dark, setDark] = useState(false);
 
-  // DEBUG
-  console.log("PDF URL:", pdfUrl);
+  // ✅ theme sync
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   // TIMER
   useEffect(() => {
@@ -25,7 +29,7 @@ function PracticePage() {
     return () => clearInterval(timer);
   }, []);
 
-  // TAB SWITCH DETECTION
+  // TAB SWITCH
   useEffect(() => {
     const handleVisibility = () => {
       if (document.hidden) {
@@ -44,20 +48,22 @@ function PracticePage() {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = ("0" + (timeLeft % 60)).slice(-2);
 
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
+    <div style={current.page}>
       
       {/* HEADER */}
-      <div style={styles.header}>
-        <h2 style={styles.title}>Practice Mode</h2>
+      <div style={current.header}>
+        <h2 style={current.title}>Practice Mode</h2>
 
-        <div style={styles.timer}>
+        <div style={current.timer}>
           ⏱ {minutes}:{seconds}
         </div>
       </div>
 
       {/* PDF VIEW */}
-      <div style={styles.viewer}>
+      <div style={current.viewer}>
         {pdfUrl ? (
           <object
             data={
@@ -94,15 +100,14 @@ function PracticePage() {
   );
 }
 
-export default PracticePage;
-
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
     padding: "20px",
     fontFamily: "Segoe UI, sans-serif",
-    color: "#fff"
+    color: "#111"
   },
 
   header: {
@@ -111,7 +116,7 @@ const styles = {
     alignItems: "center",
     marginBottom: "15px",
     padding: "15px 20px",
-    background: "rgba(255,255,255,0.05)",
+    background: "rgba(255,255,255,0.7)",
     borderRadius: "12px"
   },
 
@@ -122,16 +127,40 @@ const styles = {
   },
 
   timer: {
-    background: "linear-gradient(135deg, #ff416c, #ff4b2b)",
+    background: "linear-gradient(135deg, #ef4444, #dc2626)",
     padding: "10px 18px",
     borderRadius: "20px",
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: "#fff"
   },
 
   viewer: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.7)",
     borderRadius: "12px",
     padding: "10px",
     height: "85vh"
   }
 };
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  header: {
+    ...styles.header,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  viewer: {
+    ...styles.viewer,
+    background: "rgba(255,255,255,0.05)"
+  }
+};
+
+export default PracticePage;

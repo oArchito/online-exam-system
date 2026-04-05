@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import API from "../services/api";
 
 function StudentsDashboard() {
@@ -6,6 +6,12 @@ function StudentsDashboard() {
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [duration, setDuration] = useState("");
+  const [dark, setDark] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   const token = localStorage.getItem("token");
 
@@ -49,57 +55,67 @@ function StudentsDashboard() {
     }
   };
 
-  const logout = () => {
-    localStorage.clear();
-    window.location.reload();
-  };
+const logout = () => {
+  localStorage.removeItem("token");
+  localStorage.removeItem("role");
+  window.location.reload();
+};
 
   const goToResults = () => {
     window.location.href = "/my-results";
   };
 
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
+    <div style={current.page}>
       
       {/* HEADER */}
-      <div style={styles.header}>
-        <h1 style={styles.logo}>ExamGuard</h1>
+      <div style={current.header}>
+        <h1 style={current.logo}>ExamGuard</h1>
 
-        <button style={styles.logoutBtn} onClick={logout}>
+        <button style={current.logoutBtn} onClick={logout}>
           Logout
         </button>
       </div>
 
-      {/* CARDS */}
-      <div style={styles.container}>
+      {/* HERO TEXT */}
+      <div style={current.hero}>
+        <h2>Welcome to your Dashboard 👋</h2>
+        <p>Start exams, practice with PDFs, and track your performance</p>
+      </div>
 
-        {/* JOIN TEST */}
-        <div style={styles.card}>
-          <h2 style={styles.cardTitle}>Join Test</h2>
+      {/* CARDS */}
+      <div style={current.container}>
+
+        <div style={current.card}>
+          <h2 style={current.cardTitle}>Join Test</h2>
+          <p style={current.text}>
+            Enter the exam code provided by your teacher to start the test session in Captial Letters.
+          </p>
 
           <input
-            style={styles.input}
+            style={current.input}
             placeholder="Enter Test Code"
             value={code}
             onChange={(e) => setCode(e.target.value)}
           />
 
-          <button style={styles.primaryBtn} onClick={joinTest}>
+          <button style={current.primaryBtn} onClick={joinTest}>
             Join Test
           </button>
 
-          {message && <p style={styles.error}>{message}</p>}
+          {message && <p style={current.error}>{message}</p>}
         </div>
 
-        {/* PRACTICE */}
-        <div style={styles.card}>
-          <h2 style={styles.cardTitle}>Practice with your Own PDF</h2>
+        <div style={current.card}>
+          <h2 style={current.cardTitle}>Practice with PDF</h2>
 
           <input
             type="file"
             accept="application/pdf"
             onChange={(e) => setFile(e.target.files[0])}
-            style={styles.input}
+            style={current.input}
           />
 
           <input
@@ -107,37 +123,50 @@ function StudentsDashboard() {
             placeholder="Duration (minutes)"
             value={duration}
             onChange={(e) => setDuration(e.target.value)}
-            style={styles.input}
+            style={current.input}
           />
 
-          <button style={styles.primaryBtn} onClick={startPractice}>
+          <button style={current.primaryBtn} onClick={startPractice}>
             Start Practice
           </button>
         </div>
 
-        {/* RESULTS */}
-        <div style={styles.card}>
-          <h2 style={styles.cardTitle}>My Results</h2>
+        <div style={current.card}>
+          <h2 style={current.cardTitle}>My Results</h2>
 
-          <p style={styles.text}>
-            View your past exam performance
+          <p style={current.text}>
+            Track your performance and improve over time
           </p>
 
-          <button style={styles.primaryBtn} onClick={goToResults}>
+          <button style={current.primaryBtn} onClick={goToResults}>
             View Results
           </button>
         </div>
 
       </div>
+
+      {/* FOOTER */}
+      <div style={current.footer}>
+        <h3>About ExamGuard</h3>
+        <p>
+          ExamGuard is a secure online examination platform that ensures fair
+          testing through monitoring, timed exams, and AI-based evaluation.
+        </p>
+        <p style={{ marginTop: "10px", opacity: 0.6 }}>
+          © 2026 ExamGuard • Built for modern education
+        </p>
+      </div>
+
     </div>
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
-    color: "#fff",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    color: "#111",
     fontFamily: "Segoe UI, sans-serif",
     padding: "30px"
   },
@@ -146,26 +175,25 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: "40px",
-    padding: "15px 20px",
-    background: "rgba(255,255,255,0.05)",
-    borderRadius: "12px",
-    backdropFilter: "blur(10px)"
+    marginBottom: "20px"
   },
 
   logo: {
-    margin: 0,
-    fontSize: "26px",
-    fontWeight: "600"
+    fontSize: "28px",
+    fontWeight: "700"
   },
 
   logoutBtn: {
-    background: "rgba(255,255,255,0.1)",
-    color: "#fff",
-    border: "none",
     padding: "10px 20px",
     borderRadius: "20px",
-    cursor: "pointer"
+    border: "none",
+    cursor: "pointer",
+    background: "#e5e7eb"
+  },
+
+  hero: {
+    textAlign: "center",
+    marginBottom: "30px"
   },
 
   container: {
@@ -176,26 +204,21 @@ const styles = {
   },
 
   card: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.8)",
     padding: "25px",
-    borderRadius: "16px",
+    borderRadius: "18px",
     width: "320px",
-    backdropFilter: "blur(12px)",
-    boxShadow: "0 8px 25px rgba(0,0,0,0.4)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.15)",
     textAlign: "center",
     transition: "0.3s"
   },
 
   cardTitle: {
-    marginBottom: "15px",
-    fontSize: "20px",
-    fontWeight: "600"
+    marginBottom: "15px"
   },
 
   text: {
-    fontSize: "14px",
-    marginBottom: "20px",
-    color: "#ddd"
+    marginBottom: "15px"
   },
 
   input: {
@@ -203,28 +226,58 @@ const styles = {
     padding: "12px",
     marginBottom: "15px",
     borderRadius: "8px",
-    border: "none",
-    outline: "none",
-    fontSize: "14px"
+    border: "1px solid #ccc"
   },
 
   primaryBtn: {
     width: "100%",
     padding: "12px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
-    color: "#fff",
-    border: "none",
     borderRadius: "25px",
-    fontSize: "15px",
+    border: "none",
     cursor: "pointer",
-    fontWeight: "bold",
-    boxShadow: "0 5px 15px rgba(0,114,255,0.4)"
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    color: "#fff",
+    fontWeight: "bold"
   },
 
   error: {
-    color: "#ff6b6b",
-    marginTop: "10px",
-    fontSize: "14px"
+    color: "red"
+  },
+
+  footer: {
+    marginTop: "60px",
+    textAlign: "center",
+    padding: "30px",
+    background: "rgba(0,0,0,0.05)",
+    borderRadius: "12px"
+  }
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "rgba(255,255,255,0.05)"
+  },
+
+  input: {
+    ...styles.input,
+    background: "#1e293b",
+    color: "#fff",
+    border: "1px solid #334155"
+  },
+
+  footer: {
+    ...styles.footer,
+    background: "rgba(255,255,255,0.05)"
   }
 };
 

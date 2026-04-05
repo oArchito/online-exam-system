@@ -1,9 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import API from "../services/api";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [dark, setDark] = useState(false);
+
+  // ✅ sync with global theme
+  useEffect(() => {
+    const saved = localStorage.getItem("theme");
+    if (saved === "dark") setDark(true);
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -21,50 +28,64 @@ function Login() {
     }
   };
 
+  const current = dark ? darkStyles : styles;
+
   return (
-    <div style={styles.page}>
-      <div style={styles.card}>
-        <h1 style={styles.title}>ExamGuard</h1>
-        <p style={styles.subtitle}>Secure Online Examination System</p>
+    <div style={current.page}>
+      <div style={current.card}>
+        <h1 style={current.title}>ExamGuard</h1>
+        <p style={current.subtitle}>Secure Online Examination System</p>
+        <p style={current.subtitle}>Please enter your credentials to login. As a teacher, you can create and manage exams. As a student, you can join exams and view results.</p>
 
         <input
-          style={styles.input}
+          style={current.input}
           placeholder="Email"
           onChange={(e) => setEmail(e.target.value)}
         />
 
         <input
-          style={styles.input}
+          style={current.input}
           type="password"
           placeholder="Password"
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button style={styles.button} onClick={handleLogin}>
+        <button style={current.button} onClick={handleLogin}>
           Login
         </button>
+
+        <p style={current.signupText}>
+          Don't have an account?{" "}
+          <span
+            style={current.link}
+            onClick={() => (window.location.href = "/signup")}
+          >
+            Signup
+          </span>
+        </p>
       </div>
     </div>
   );
 }
 
+/* 🌞 LIGHT MODE */
 const styles = {
   page: {
     height: "100vh",
-    background: "linear-gradient(135deg, #0f2027, #203a43, #2c5364)",
+    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     fontFamily: "Segoe UI, sans-serif",
-    color: "#fff"
+    color: "#111"
   },
 
   card: {
-    background: "rgba(255,255,255,0.08)",
+    background: "rgba(255,255,255,0.7)",
     padding: "45px",
     borderRadius: "16px",
     backdropFilter: "blur(12px)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.4)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
     textAlign: "center",
     width: "340px"
   },
@@ -77,7 +98,7 @@ const styles = {
 
   subtitle: {
     marginBottom: "25px",
-    opacity: 0.8,
+    opacity: 0.7,
     fontSize: "14px"
   },
 
@@ -86,7 +107,7 @@ const styles = {
     padding: "12px",
     marginBottom: "15px",
     borderRadius: "8px",
-    border: "none",
+    border: "1px solid #ccc",
     outline: "none",
     fontSize: "14px"
   },
@@ -94,15 +115,61 @@ const styles = {
   button: {
     width: "100%",
     padding: "12px",
-    background: "linear-gradient(135deg, #00c6ff, #0072ff)",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
     border: "none",
     borderRadius: "25px",
     fontSize: "16px",
     fontWeight: "bold",
     cursor: "pointer",
     color: "#fff",
-    boxShadow: "0 5px 15px rgba(0,114,255,0.4)",
+    boxShadow: "0 5px 15px rgba(99,102,241,0.4)",
     transition: "0.3s"
+  },
+
+  signupText: {
+    marginTop: "18px",
+    fontSize: "14px",
+    color: "#555"
+  },
+
+  link: {
+    color: "#3b82f6",
+    cursor: "pointer",
+    fontWeight: "600"
+  }
+};
+
+/* 🌙 DARK MODE */
+const darkStyles = {
+  ...styles,
+
+  page: {
+    ...styles.page,
+    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    color: "#fff"
+  },
+
+  card: {
+    ...styles.card,
+    background: "rgba(255,255,255,0.05)",
+    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
+  },
+
+  input: {
+    ...styles.input,
+    background: "#1e293b",
+    border: "1px solid #334155",
+    color: "#fff"
+  },
+
+  signupText: {
+    ...styles.signupText,
+    color: "#ccc"
+  },
+
+  link: {
+    ...styles.link,
+    color: "#60a5fa"
   }
 };
 
