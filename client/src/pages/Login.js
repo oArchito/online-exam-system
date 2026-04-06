@@ -6,7 +6,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const [dark, setDark] = useState(false);
 
-  // ✅ sync with global theme
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark") setDark(true);
@@ -16,7 +15,7 @@ function Login() {
     try {
       const res = await API.post("/auth/login", {
         email,
-        password
+        password,
       });
 
       localStorage.setItem("token", res.data.token);
@@ -32,145 +31,218 @@ function Login() {
 
   return (
     <div style={current.page}>
-      <div style={current.card}>
-        <h1 style={current.title}>ExamGuard</h1>
-        <p style={current.subtitle}>Secure Online Examination System</p>
-        <p style={current.subtitle}>Please enter your credentials to login. As a teacher, you can create and manage exams. As a student, you can join exams and view results.</p>
+      <div style={current.grid}></div>
+      <div style={current.glow1}></div>
+      <div style={current.glow2}></div>
 
-        <input
-          style={current.input}
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
+      <div style={current.wrapper}>
+        
+        {/* LEFT CONTENT */}
+        <div style={current.left}>
+          <h1 style={current.title}>ExamGuard</h1>
+          <h3 style={current.tagline}>Secure • Monitor • Evaluate</h3>
 
-        <input
-          style={current.input}
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div style={current.features}>
+            <p>✔ Real-time exam monitoring</p>
+            <p>✔ Tab switching detection</p>
+            <p>✔ Instant result generation</p>
+            <p>✔ Join exams using code</p>
+          </div>
 
-        <button style={current.button} onClick={handleLogin}>
-          Login
-        </button>
+          <div style={current.stats}>
+            <span>Fast + Secure + Scalable</span>
+           
+          </div>
+        </div>
 
-        <p style={current.signupText}>
-          Don't have an account?{" "}
-          <span
-            style={current.link}
-            onClick={() => (window.location.href = "/signup")}
-          >
-            Signup
-          </span>
-        </p>
+        {/* RIGHT LOGIN */}
+        <div style={current.right}>
+          <div style={current.form}>
+            <input
+              style={current.input}
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+
+            <input
+              style={current.input}
+              type="password"
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            <button style={current.button} onClick={handleLogin}>
+              Login →
+            </button>
+
+            <p style={current.signupText}>
+              Don’t have an account?{" "}
+              <span
+                style={current.link}
+                onClick={() => (window.location.href = "/signup")}
+              >
+                Signup
+              </span>
+            </p>
+          </div>
+        </div>
+
       </div>
     </div>
   );
 }
 
-/* 🌞 LIGHT MODE */
+/* 🌞 LIGHT */
 const styles = {
   page: {
     height: "100vh",
-    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    fontFamily: "Segoe UI, sans-serif",
-    color: "#111"
+    overflow: "hidden",
+    position: "relative",
+    fontFamily: "Inter, sans-serif",
+    background: "#eef2ff",
   },
 
-  card: {
-    background: "rgba(255,255,255,0.7)",
-    padding: "45px",
-    borderRadius: "16px",
-    backdropFilter: "blur(12px)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    textAlign: "center",
-    width: "340px"
+  wrapper: {
+    display: "flex",
+    height: "100%",
+    alignItems: "center",
+    justifyContent: "space-around",
+    padding: "0 80px",
+    zIndex: 2,
+    position: "relative",
+  },
+
+  grid: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundImage:
+      "linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px)",
+    backgroundSize: "40px 40px",
+  },
+
+  glow1: {
+    position: "absolute",
+    width: "500px",
+    height: "500px",
+    background: "#6366f1",
+    filter: "blur(140px)",
+    opacity: 0.4,
+    top: "-100px",
+    left: "-100px",
+  },
+
+  glow2: {
+    position: "absolute",
+    width: "500px",
+    height: "500px",
+    background: "#3b82f6",
+    filter: "blur(140px)",
+    opacity: 0.4,
+    bottom: "-100px",
+    right: "-100px",
+  },
+
+  left: {
+    maxWidth: "400px",
   },
 
   title: {
-    marginBottom: "5px",
-    fontSize: "28px",
-    fontWeight: "600"
+    fontSize: "48px",
+    fontWeight: "800",
+    background: "linear-gradient(90deg, #6366f1, #3b82f6)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
   },
 
-  subtitle: {
-    marginBottom: "25px",
+  tagline: {
+    marginTop: "10px",
     opacity: 0.7,
-    fontSize: "14px"
+    marginBottom: "30px",
+  },
+
+  features: {
+    lineHeight: "2",
+    fontSize: "15px",
+    opacity: 0.8,
+  },
+
+  stats: {
+    marginTop: "40px",
+    display: "flex",
+    gap: "20px",
+    fontSize: "14px",
+    opacity: 0.7,
+  },
+
+  right: {
+    width: "320px",
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "15px",
   },
 
   input: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "8px",
-    border: "1px solid #ccc",
+    padding: "14px",
+    borderRadius: "10px",
+    border: "1px solid rgba(0,0,0,0.1)",
+    background: "rgba(255,255,255,0.8)",
     outline: "none",
-    fontSize: "14px"
   },
 
   button: {
-    width: "100%",
-    padding: "12px",
-    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    padding: "14px",
+    borderRadius: "30px",
     border: "none",
-    borderRadius: "25px",
-    fontSize: "16px",
-    fontWeight: "bold",
-    cursor: "pointer",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
     color: "#fff",
-    boxShadow: "0 5px 15px rgba(99,102,241,0.4)",
-    transition: "0.3s"
+    fontWeight: "600",
+    cursor: "pointer",
+    boxShadow: "0 10px 30px rgba(99,102,241,0.4)",
   },
 
   signupText: {
-    marginTop: "18px",
+    marginTop: "10px",
     fontSize: "14px",
-    color: "#555"
   },
 
   link: {
     color: "#3b82f6",
     cursor: "pointer",
-    fontWeight: "600"
-  }
+    fontWeight: "600",
+  },
 };
 
-/* 🌙 DARK MODE */
+/* 🌙 DARK */
 const darkStyles = {
   ...styles,
 
   page: {
     ...styles.page,
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
-    color: "#fff"
+    background: "#020617",
+    color: "#fff",
   },
 
-  card: {
-    ...styles.card,
-    background: "rgba(255,255,255,0.05)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
+  grid: {
+    ...styles.grid,
+    backgroundImage:
+      "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
   },
 
   input: {
     ...styles.input,
-    background: "#1e293b",
+    background: "rgba(30,41,59,0.8)",
     border: "1px solid #334155",
-    color: "#fff"
-  },
-
-  signupText: {
-    ...styles.signupText,
-    color: "#ccc"
+    color: "#fff",
   },
 
   link: {
     ...styles.link,
-    color: "#60a5fa"
-  }
+    color: "#60a5fa",
+  },
 };
 
 export default Login;

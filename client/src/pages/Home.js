@@ -26,20 +26,16 @@ function Home() {
 
   return (
     <div style={current.page}>
+      {/* GRID */}
+      <div style={grid}></div>
+
       {/* NAVBAR */}
       <div style={current.navbar}>
-        {/* TEXT LOGO + SLOGAN */}
         <div
           style={{ cursor: "pointer", lineHeight: "1.2" }}
           onClick={() => (window.location.href = "/")}
         >
-          <div
-            style={{
-              ...current.logo,
-              fontWeight: "700",
-              fontSize: "22px",
-            }}
-          >
+          <div style={{ ...current.logo, fontWeight: "700", fontSize: "22px" }}>
             ExamGuard
           </div>
 
@@ -56,7 +52,6 @@ function Home() {
         </div>
 
         <div>
-          {/* 🌗 TOGGLE */}
           <button style={current.toggleBtn} onClick={toggleTheme}>
             {dark ? "🌙" : "☀️"}
           </button>
@@ -76,7 +71,7 @@ function Home() {
           </button>
 
           <button
-            style={current.navBtn}
+            style={current.primaryBtn}
             onClick={() => (window.location.href = "/signup")}
           >
             Signup
@@ -111,29 +106,15 @@ function Home() {
         </div>
       </div>
 
-      {/* FEATURES */}
-      <div style={current.features}>
-        <div style={current.featureCard}>
-          ⏱️ Timed Exams
-          <p style={current.featureText}>
-            Auto submission after time ends
-          </p>
-        </div>
-
-        <div style={current.featureCard}>
-          🚫 Tab Monitoring
-          <p style={current.featureText}>
-            Prevent cheating via tab switch detection
-          </p>
-        </div>
-
-        <div style={current.featureCard}>
-          📄 PDF Practice
-          <p style={current.featureText}>
-            Upload PDFs and practice anytime
-          </p>
-        </div>
-      </div>
+      {/* 🔥 MODERN FEATURES GRID */}
+      <div style={current.featuresWrapper}>
+  {features.map((f, i) => (
+    <div key={i} style={current.featureBox} className="feature-animate">
+      <h3>{f.title}</h3>
+      <p>{f.desc}</p>
+    </div>
+  ))}
+</div>
 
       {/* ABOUT */}
       <div style={current.about}>
@@ -146,44 +127,99 @@ function Home() {
 
       {/* FOOTER */}
       <div style={current.footer}>
-        <p>Contact: architaggarwal661@gmail.com</p>
-        <p>Contact No.: 1234567890</p>
-        <p>© 2026 ExamGuard</p>
+        <p
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "20px",
+            flexWrap: "wrap",
+          }}
+        >
+          <span>📧 architaggarwal661@gmail.com</span>
+          <span>📞 1234567890</span>
+          <span>© 2026 ExamGuard</span>
+        </p>
       </div>
     </div>
   );
 }
 
-/* 🌞 LIGHT MODE */
+/* FEATURES */
+const features = [
+  {
+    title: "Timed Exams",
+    desc: "Auto submission after time ends",
+  },
+  {
+    title: "Tab Monitoring",
+    desc: "Prevent cheating via tab switch detection",
+  },
+  {
+    title: "PDF Practice",
+    desc: "Upload PDFs and practice anytime",
+  },
+  {
+    title: "Join via Code",
+    desc: "Students join exams using unique code",
+  },
+  {
+    title: "Results Dashboard",
+    desc: "Track performance & analytics",
+  },
+];
+
+/* GRID BACKGROUND */
+const grid = {
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  backgroundImage:
+    "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
+  backgroundSize: "40px 40px",
+  zIndex: 0,
+};
+
+/* LIGHT MODE */
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    background: "radial-gradient(circle at top, #e0f2fe, #eef2ff)",
     color: "#111",
-    fontFamily: "Segoe UI, sans-serif",
-    transition: "0.3s",
+    fontFamily: "Inter, sans-serif",
+    position: "relative",
+    overflow: "hidden",
   },
 
-  navbar: {
-    display: "flex",
-    justifyContent: "space-between",
-    padding: "15px 40px",
-    alignItems: "center",
-    backdropFilter: "blur(10px)",
-  },
+ navbar: {
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "20px 40px",
+  alignItems: "center",
+
+  position: "sticky",
+  top: 0,
+  zIndex: 1000,
+
+  backdropFilter: "blur(12px)",
+  background: "rgba(255,255,255,0.6)",
+  borderBottom: "1px solid rgba(255,255,255,0.1)",
+},
+    
 
   logo: {
-    cursor: "pointer",
+    background: "linear-gradient(90deg, #6366f1, #22d3ee)",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
   },
 
   navBtn: {
     marginLeft: "10px",
-    padding: "8px 16px",
+    padding: "8px 18px",
     borderRadius: "20px",
-    border: "none",
+    border: "1px solid rgba(0,0,0,0.1)",
+    background: "transparent",
+    color: "#111",
     cursor: "pointer",
-    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
-    color: "#fff",
   },
 
   toggleBtn: {
@@ -192,17 +228,21 @@ const styles = {
     borderRadius: "50%",
     border: "none",
     cursor: "pointer",
-    background: "#111",
-    color: "#fff",
   },
 
   hero: {
     textAlign: "center",
-    marginTop: "100px",
+    marginTop: "120px",
+    position: "relative",
+    zIndex: 2,
   },
 
   title: {
-    fontSize: "42px",
+    fontSize: "52px",
+    fontWeight: "800",
+    background: "linear-gradient(90deg, #6366f1, #22d3ee)",
+    WebkitBackgroundClip: "text",
+    color: "transparent",
   },
 
   subtitle: {
@@ -214,45 +254,44 @@ const styles = {
   },
 
   primaryBtn: {
-    padding: "14px 28px",
-    borderRadius: "30px",
+    padding: "12px 24px",
+    borderRadius: "20px",
     border: "none",
-    marginRight: "10px",
-    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    background: "linear-gradient(135deg, #6366f1, #22d3ee)",
     color: "#fff",
-    boxShadow: "0 5px 15px rgba(99,102,241,0.4)",
+    fontWeight: "600",
     cursor: "pointer",
+    
   },
 
   secondaryBtn: {
-    padding: "14px 28px",
-    borderRadius: "30px",
-    border: "none",
-    background: "#ccc",
-    color: "#111",
-    cursor: "pointer",
+    padding: "12px 24px",
+    borderRadius: "20px",
+    border: "1px solid #ccc",
+    background: "transparent",
   },
 
-  features: {
-    display: "flex",
-    justifyContent: "center",
-    gap: "25px",
-    marginTop: "80px",
-    flexWrap: "wrap",
-  },
+  featuresWrapper: {
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+  gap: "25px",
+  marginTop: "80px",
+  padding: "0 40px",
+  position: "relative",
+  zIndex: 2,
+},
 
-  featureCard: {
-    padding: "25px",
-    borderRadius: "12px",
-    width: "220px",
-    textAlign: "center",
-    background: "rgba(255,255,255,0.6)",
-    backdropFilter: "blur(10px)",
-  },
+featureBox: {
+  padding: "28px",
+  borderRadius: "16px",
+  border: "1px solid rgba(255,255,255,0.15)",
+  background: "transparent",
+  transition: "0.3s",
+},
 
-  featureText: {
-    fontSize: "14px",
-    opacity: 0.8,
+  icon: {
+    fontSize: "28px",
+    marginBottom: "10px",
   },
 
   about: {
@@ -264,30 +303,38 @@ const styles = {
   footer: {
     textAlign: "center",
     padding: "20px",
-    opacity: 0.7,
   },
 };
 
-/* 🌙 DARK MODE */
+/* DARK MODE */
 const darkStyles = {
   ...styles,
 
   page: {
     ...styles.page,
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    background: "radial-gradient(circle at top, #0f172a, #020617)",
     color: "#fff",
+  },
+navbar: {
+  ...styles.navbar,
+  background: "rgba(2, 6, 23, 0.7)",
+},
+  navBtn: {
+    ...styles.navBtn,
+    color: "#fff",
+    border: "1px solid rgba(255,255,255,0.2)",
   },
 
   secondaryBtn: {
     ...styles.secondaryBtn,
-    background: "#334155",
+    border: "1px solid rgba(255,255,255,0.2)",
     color: "#fff",
   },
 
-  featureCard: {
-    ...styles.featureCard,
-    background: "rgba(255,255,255,0.05)",
-  },
+ featureBox: {
+  ...styles.featureBox,
+  border: "1px solid rgba(255,255,255,0.2)",
+},
 };
 
 export default Home;

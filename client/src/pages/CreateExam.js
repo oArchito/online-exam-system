@@ -53,6 +53,13 @@ function CreateExam() {
     ]);
   };
 
+  // ✅ DELETE QUESTION (Q1 SAFE)
+  const deleteQuestion = (index) => {
+    if (index === 0) return;
+    const updated = questions.filter((_, i) => i !== index);
+    setQuestions(updated);
+  };
+
   const validate = () => {
     if (!title || !duration) return "Title & duration required";
 
@@ -121,28 +128,42 @@ function CreateExam() {
       <div style={current.container}>
         <h2 style={current.heading}>Create Exam</h2>
 
-        <input
-          style={current.input}
-          placeholder="Exam Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
+        <div style={current.row}>
+          <input
+            style={current.input}
+            placeholder="Exam Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
 
-        <input
-          style={current.input}
-          type="number"
-          placeholder="Duration (minutes)"
-          value={duration}
-          onChange={(e) => setDuration(e.target.value)}
-        />
+          <input
+            style={current.input}
+            type="number"
+            placeholder="Duration (minutes)"
+            value={duration}
+            onChange={(e) => setDuration(e.target.value)}
+          />
+        </div>
 
         <h3 style={current.subHeading}>Questions</h3>
 
         {questions.map((q, index) => (
-          <div key={index} style={current.card}>
-            <p style={current.questionLabel}>
-              Question {index + 1}
-            </p>
+          <div key={index} style={current.questionBlock} className="q-block">
+
+            <div style={current.accent}></div>
+
+            <div style={current.qHeader}>
+              <span style={current.qLabel}>Question {index + 1}</span>
+
+              {index !== 0 && (
+                <button
+                  style={current.deleteBtn}
+                  onClick={() => deleteQuestion(index)}
+                >
+                  ✕
+                </button>
+              )}
+            </div>
 
             <input
               style={current.input}
@@ -154,7 +175,7 @@ function CreateExam() {
             />
 
             <select
-              style={{ ...current.input, cursor: "pointer" }}
+              style={current.input}
               value={q.type}
               onChange={(e) =>
                 handleQuestionChange(index, "type", e.target.value)
@@ -165,7 +186,7 @@ function CreateExam() {
             </select>
 
             {q.type === "mcq" && (
-              <>
+              <div style={current.optionsGrid}>
                 {q.options.map((opt, i) => (
                   <input
                     key={i}
@@ -179,7 +200,7 @@ function CreateExam() {
                 ))}
 
                 <select
-                  style={{ ...current.input, cursor: "pointer" }}
+                  style={current.input}
                   value={q.answer}
                   onChange={(e) =>
                     handleAnswerChange(index, e.target.value)
@@ -192,13 +213,7 @@ function CreateExam() {
                     </option>
                   ))}
                 </select>
-              </>
-            )}
-
-            {q.type === "theory" && (
-              <p style={{ fontSize: "13px", opacity: 0.7 }}>
-                Student will write answer (AI will evaluate)
-              </p>
+              </div>
             )}
           </div>
         ))}
@@ -208,7 +223,7 @@ function CreateExam() {
         </button>
 
         <button style={current.primaryBtn} onClick={handleSubmit}>
-          Create Exam
+          Create Exam →
         </button>
 
         {message && <p style={current.message}>{message}</p>}
@@ -217,86 +232,119 @@ function CreateExam() {
   );
 }
 
-/* 🌞 LIGHT MODE */
+/* 🌞 LIGHT */
 const styles = {
   page: {
-    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
     minHeight: "100vh",
     padding: "40px",
-    fontFamily: "Segoe UI, sans-serif",
-    color: "#111"
+    background: "#f8fafc",
+    fontFamily: "Inter, sans-serif"
   },
 
   container: {
-    maxWidth: "700px",
+    maxWidth: "850px",
     margin: "auto",
-    background: "rgba(255,255,255,0.7)",
     padding: "35px",
-    borderRadius: "16px",
-    backdropFilter: "blur(12px)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)"
+    borderRadius: "18px",
+    background: "rgba(255,255,255,0.8)",
+    boxShadow: "0 20px 60px rgba(0,0,0,0.15)"
   },
 
   heading: {
     textAlign: "center",
-    marginBottom: "25px",
-    fontSize: "26px"
+    marginBottom: "25px"
   },
 
   subHeading: {
-    marginTop: "25px",
-    marginBottom: "10px"
+    marginBottom: "15px"
   },
 
-  card: {
-    background: "rgba(255,255,255,0.6)",
-    padding: "18px",
-    marginBottom: "15px",
-    borderRadius: "12px"
+  row: {
+    display: "flex",
+    gap: "10px"
   },
 
   input: {
     width: "100%",
     padding: "12px",
     marginBottom: "10px",
-    borderRadius: "8px",
-    border: "1px solid #ccc"
+    borderRadius: "10px",
+    border: "1px solid #ccc",
+    background: "#fff"
+  },
+
+  questionBlock: {
+    padding: "20px",
+    marginBottom: "15px",
+    borderRadius: "12px",
+    position: "relative",
+    background: "rgba(0,0,0,0.04)"
+  },
+
+  accent: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: "4px",
+    background: "#6366f1"
+  },
+
+  qHeader: {
+    display: "flex",
+    justifyContent: "space-between",
+    marginBottom: "10px"
+  },
+
+  qLabel: {
+    fontWeight: "600"
+  },
+
+  deleteBtn: {
+    background: "transparent",
+    border: "none",
+    color: "red",
+    cursor: "pointer"
+  },
+
+  optionsGrid: {
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr",
+    gap: "10px"
   },
 
   primaryBtn: {
     width: "100%",
-    padding: "14px",
-    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    padding: "12px",
+    background: "#6366f1",
+    color: "#fff",
     border: "none",
     borderRadius: "25px",
-    color: "#fff",
-    marginTop: "15px"
+    marginTop: "10px"
   },
 
   secondaryBtn: {
     width: "100%",
     padding: "12px",
-    background: "linear-gradient(135deg, #f97316, #fb923c)",
-    border: "none",
-    borderRadius: "25px",
+    background: "#f97316",
     color: "#fff",
-    marginTop: "10px"
+    border: "none",
+    borderRadius: "25px"
   },
 
   message: {
-    marginTop: "20px",
     textAlign: "center",
-    fontWeight: "bold"
+    marginTop: "10px"
   }
 };
 
-/* 🌙 DARK MODE */
+/* 🌙 DARK */
 const darkStyles = {
   ...styles,
 
   page: {
     ...styles.page,
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
+    background: "#020617",
     color: "#fff"
   },
 
@@ -305,16 +353,16 @@ const darkStyles = {
     background: "rgba(255,255,255,0.05)"
   },
 
-  card: {
-    ...styles.card,
-    background: "rgba(255,255,255,0.05)"
-  },
-
   input: {
     ...styles.input,
     background: "#1e293b",
-    border: "1px solid #334155",
-    color: "#fff"
+    color: "#fff",
+    border: "1px solid #334155"
+  },
+
+  questionBlock: {
+    ...styles.questionBlock,
+    background: "rgba(255,255,255,0.05)"
   }
 };
 

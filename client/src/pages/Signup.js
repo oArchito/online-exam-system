@@ -8,7 +8,6 @@ function Signup() {
   const [role, setRole] = useState("student");
   const [dark, setDark] = useState(false);
 
-  // ✅ theme sync
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     if (saved === "dark") setDark(true);
@@ -20,7 +19,7 @@ function Signup() {
         name,
         email,
         password,
-        role
+        role,
       });
 
       alert("Signup successful");
@@ -34,171 +33,225 @@ function Signup() {
 
   return (
     <div style={current.page}>
-      <div style={current.card}>
-        <h1 style={current.title}>Create Account</h1>
-        <p style={current.subtitle}>Join ExamGuard platform</p>
+      
+      {/* BACKGROUND ELEMENTS */}
+      <div style={current.grid}></div>
+      <div style={current.glow}></div>
 
-        <input
-          style={current.input}
-          placeholder="Full Name"
-          onChange={(e) => setName(e.target.value)}
-        />
+      <div style={current.container}>
+        
+        {/* LEFT SIDE INFO */}
+        <div style={current.side}>
+          <h2 style={current.sideTitle}>ExamGuard</h2>
+          <p style={current.sideText}>
+            Secure • Monitor • Evaluate
+          </p>
+        </div>
 
-        <input
-          style={current.input}
-          placeholder="Email"
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        {/* FORM */}
+        <div style={current.formBox}>
+          <h1 style={current.title}>Create Account</h1>
+          <p style={current.subtitle}>Join ExamGuard</p>
 
-        <input
-          style={current.input}
-          type="password"
-          placeholder="Password"
-          onChange={(e) => setPassword(e.target.value)}
-        />
+          <div style={current.form}>
 
-        <select
-          style={current.select}
-          value={role}
-          onChange={(e) => setRole(e.target.value)}
-        >
-          <option value="student">Student</option>
-          <option value="admin">Teacher</option>
-        </select>
+            <input
+              style={current.input}
+              placeholder="Full Name"
+              onChange={(e) => setName(e.target.value)}
+            />
 
-        <button style={current.button} onClick={handleSignup}>
-          Signup
-        </button>
+            <input
+              style={current.input}
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-        <p style={current.loginText}>
-          Already have an account?{" "}
-          <span
-            style={current.link}
-            onClick={() => (window.location.href = "/login")}
-          >
-            Login
-          </span>
-        </p>
+            <input
+              type="password"
+              style={current.input}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+
+            {/* FIXED DROPDOWN */}
+            <select
+              style={current.select}
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="student">Student</option>
+              <option value="admin">Teacher</option>
+            </select>
+
+            <button style={current.button} onClick={handleSignup}>
+              Signup →
+            </button>
+          </div>
+
+          <div style={current.divider}></div>
+
+          <p style={current.loginText}>
+            Already have an account?{" "}
+            <span
+              style={current.link}
+              onClick={() => (window.location.href = "/login")}
+            >
+              Login
+            </span>
+          </p>
+        </div>
+
       </div>
     </div>
   );
 }
 
-/* 🌞 LIGHT MODE */
+/* 🌞 LIGHT */
 const styles = {
   page: {
-    height: "100vh",
-    background: "linear-gradient(135deg, #eef2ff, #e0f2fe)",
+    minHeight: "100vh",
+    position: "relative",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    fontFamily: "Segoe UI, sans-serif",
-    color: "#111"
+    fontFamily: "Inter, sans-serif",
+    overflow: "hidden",
+    background: "#eef2ff",
   },
 
-  card: {
-    background: "rgba(255,255,255,0.7)",
-    padding: "40px",
-    borderRadius: "16px",
-    backdropFilter: "blur(12px)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.2)",
-    textAlign: "center",
-    width: "340px"
+  grid: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    backgroundImage:
+      "linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(0,0,0,0.05) 1px, transparent 1px)",
+    backgroundSize: "40px 40px",
+  },
+
+  glow: {
+    position: "absolute",
+    width: "600px",
+    height: "600px",
+    background: "radial-gradient(circle, #6366f1, transparent)",
+    filter: "blur(120px)",
+    opacity: 0.4,
+  },
+
+  container: {
+    display: "flex",
+    gap: "60px",
+    alignItems: "center",
+    zIndex: 2,
+  },
+
+  side: {
+    maxWidth: "260px",
+  },
+
+  sideTitle: {
+    fontSize: "28px",
+    fontWeight: "700",
+  },
+
+  sideText: {
+    opacity: 0.6,
+    marginTop: "10px",
+  },
+
+  formBox: {
+    width: "340px",
   },
 
   title: {
-    marginBottom: "5px",
-    fontSize: "26px",
-    fontWeight: "600"
+    fontSize: "34px",
+    fontWeight: "800",
   },
 
   subtitle: {
-    marginBottom: "25px",
+    marginBottom: "20px",
     opacity: 0.7,
-    fontSize: "14px"
+  },
+
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px",
   },
 
   input: {
     width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "8px",
+    padding: "13px",
+    borderRadius: "10px",
     border: "1px solid #ccc",
-    outline: "none",
-    fontSize: "14px"
+    boxSizing: "border-box",
   },
 
   select: {
-    width: "100%",
-    padding: "12px",
-    marginBottom: "15px",
-    borderRadius: "8px",
+    width: "100%", // ✅ FIXED
+    padding: "13px",
+    borderRadius: "10px",
     border: "1px solid #ccc",
-    fontSize: "14px",
-    background: "#fff",
-    color: "#111",
-    cursor: "pointer"
+    boxSizing: "border-box", // ✅ IMPORTANT
   },
 
   button: {
-    width: "100%",
-    padding: "12px",
-    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
-    border: "none",
+    padding: "14px",
     borderRadius: "25px",
-    fontSize: "16px",
-    fontWeight: "bold",
+    border: "none",
+    background: "linear-gradient(135deg, #6366f1, #3b82f6)",
+    color: "#fff",
+    fontWeight: "600",
     cursor: "pointer",
-    color: "#fff"
+  },
+
+  divider: {
+    height: "1px",
+    background: "rgba(0,0,0,0.1)",
+    margin: "20px 0",
   },
 
   loginText: {
-    marginTop: "15px",
-    fontSize: "13px",
-    opacity: 0.7
+    fontSize: "14px",
+    textAlign: "center",
   },
 
   link: {
     color: "#3b82f6",
     cursor: "pointer",
-    fontWeight: "bold"
-  }
+    fontWeight: "600",
+  },
 };
 
-/* 🌙 DARK MODE */
+/* 🌙 DARK */
 const darkStyles = {
   ...styles,
 
   page: {
     ...styles.page,
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
-    color: "#fff"
+    background: "#020617",
+    color: "#fff",
   },
 
-  card: {
-    ...styles.card,
-    background: "rgba(255,255,255,0.05)",
-    boxShadow: "0 10px 30px rgba(0,0,0,0.6)"
+  grid: {
+    ...styles.grid,
+    backgroundImage:
+      "linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px)",
   },
 
   input: {
     ...styles.input,
     background: "#1e293b",
     border: "1px solid #334155",
-    color: "#fff"
+    color: "#fff",
   },
 
   select: {
     ...styles.select,
     background: "#1e293b",
+    border: "1px solid #334155",
     color: "#fff",
-    border: "1px solid #334155"
   },
-
-  loginText: {
-    ...styles.loginText,
-    color: "#ccc"
-  }
 };
 
 export default Signup;
