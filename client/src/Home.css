@@ -1,4 +1,5 @@
 /* 🔥 GLOBAL BUTTON ANIMATION */
+
 button {
   transition: all 0.25s ease;
 }
@@ -44,7 +45,33 @@ button:active {
 .float-slow {
   animation: float 10s ease-in-out infinite;
 }
+.q-card {
+  transition: all 0.3s ease;
+}
 
+.q-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.7);
+}
+.question-card {
+  transition: all 0.3s ease;
+}
+
+.question-card:hover {
+  transform: scale(1.02);
+  border: 1px solid #6366f1;
+  box-shadow: 0 0 25px rgba(99, 102, 241, 0.6);
+  background: rgba(99, 102, 241, 0.08);
+}
+/* OPTIONS */
+input[type="radio"] {
+  accent-color: #6366f1;
+}
+
+label:hover {
+  transform: translateX(5px);
+  transition: 0.2s;
+}
 @keyframes float {
   0% {
     transform: translateY(0px);
@@ -111,6 +138,24 @@ button:active {
 .scroll-item:hover {
   transform: scale(1.1);
   opacity: 1;
+}
+.netflix-card {
+  transition: all 0.3s ease;
+}
+
+.netflix-card:hover {
+  transform: scale(1.08);
+  z-index: 10;
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+}
+.result-card {
+  transition: all 0.3s ease;
+}
+
+.result-card:hover {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 25px 80px rgba(0,0,0,0.6);
+  border-color: #6366f1;
 }
 
 /* 🔁 INFINITE SCROLL */

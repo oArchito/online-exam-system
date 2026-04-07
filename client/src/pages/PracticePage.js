@@ -69,7 +69,7 @@ function PracticePage() {
             data={
               pdfUrl.startsWith("http")
                 ? pdfUrl
-                : `http://localhost:5000${pdfUrl}`
+                : `https://online-exam-system-w05s.onrender.com${pdfUrl}`
             }
             type="application/pdf"
             width="100%"
@@ -82,7 +82,7 @@ function PracticePage() {
                 href={
                   pdfUrl.startsWith("http")
                     ? pdfUrl
-                    : `http://localhost:5000${pdfUrl}`
+                    : `https://online-exam-system-w05s.onrender.com${pdfUrl}`
                 }
                 target="_blank"
                 rel="noreferrer"

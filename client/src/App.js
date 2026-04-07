@@ -17,14 +17,9 @@ function App() {
 
   // ✅ GLOBAL THEME APPLY
   useEffect(() => {
-    const saved = localStorage.getItem("theme");
-
-    if (saved === "dark") {
-      document.body.classList.add("dark");
-    } else {
-      document.body.classList.remove("dark");
-    }
-  }, []);
+  document.body.classList.add("dark");
+}, []);
+ 
 
   const path = window.location.pathname;
 
